@@ -1,0 +1,71 @@
+- description: Feature not specified
+  vars:
+    query: Is it available on Starter?
+    reference_answer: The question does not say which feature. The assistant should ask what feature the user means.
+  metadata:
+    id: amb-004
+
+- description: Legacy Business plan price
+  vars:
+    query: How much does the Business plan cost?
+    reference_answer: The Business plan was renamed Pro in release 5.0 (January 15, 2026). Pro costs $15 per user per month
+      on monthly billing or $12 per user per month billed annually. Under the archived 2024 pricing, Business was $12 monthly,
+      and legacy customers keep that price until their next renewal after January 15, 2027.
+  metadata:
+    id: cf-003
+
+- description: 'Follow-up: extending Trash retention'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "How long do deleted items stay in the Trash?"},
+        {"role": "assistant", "content": "Deleted items stay in the Trash for 30 days and are then permanently deleted [data_retention_and_privacy#chunk_0]."}
+      ]
+    query: Can that be extended?
+    reference_answer: Yes, on Enterprise. Enterprise workspaces can configure Trash retention of up to 180 days.
+  metadata:
+    id: conv-002
+
+- description: 'Follow-up: file limit on Free after error E204'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does error E204 mean?"},
+        {"role": "assistant", "content": "E204 means the attachment is larger than your plan's file size limit. Compress the file or upgrade your plan [troubleshooting#chunk_0]."}
+      ]
+    query: What's the limit on the Free plan?
+    reference_answer: On the Free plan the maximum size of a single attachment is 10 MB.
+  metadata:
+    id: conv-004
+
+- description: EU data residency on Pro and when it became available
+  vars:
+    query: Can a Pro workspace be hosted in the EU, and since when has that been possible?
+    reference_answer: Yes. Pro workspaces can use the EU region in Frankfurt, Germany. It became available on Pro in version
+      5.1 on May 20, 2026; before that it was Enterprise only. The region is chosen when the workspace is created.
+  metadata:
+    id: mh-002
+
+- description: Cheapest annual price with Brindlework AI
+  vars:
+    query: What is the cheapest annual per-user price for a plan that includes Brindlework AI?
+    reference_answer: Brindlework AI is included in Pro and Enterprise. The cheapest is Pro at $12 per user per month on annual
+      billing.
+  metadata:
+    id: mh-008
+
+- description: API rate limit response
+  vars:
+    query: What happens when my API integration exceeds the rate limit?
+    reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+      retrying.
+  metadata:
+    id: sh-010
+
+- description: Storage add-on price
+  vars:
+    query: How much does an extra storage add-on cost?
+    reference_answer: The documentation mentions storage add-ons only as non-refundable and does not give a price. The assistant
+      should say it doesn't know the price and suggest contacting support at support@brindlework.example.
+  metadata:
+    id: un-004

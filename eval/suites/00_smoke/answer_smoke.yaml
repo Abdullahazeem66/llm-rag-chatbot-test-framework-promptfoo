@@ -1,0 +1,84 @@
+description: "Smoke › Answer pipeline — retrieval, generation, citations and grading plumbing work end to end"
+
+prompts:
+  - id: bree-default-v1
+    label: "Bree default prompt v1"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../providers/rag_provider.py
+    label: rag-baseline
+    config:
+      pipeline: baseline
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: javascript
+      value: output.trim().length > 20
+      metric: NonEmptyAnswer
+    - type: javascript
+      value: (context.providerResponse?.metadata?.retrieved_ids || []).length > 0
+      metric: ContextRetrieved
+    - type: regex
+      value: '\[[^\]]*#chunk_\d+[^\]]*\]'
+      metric: HasCitation
+    - type: latency
+      threshold: 20000
+      metric: Latency
+
+tests:
+  - description: "Table lookup — Pro monthly price"
+    vars:
+      query: "How much does the Pro plan cost per user on monthly billing?"
+    assert:
+      - type: icontains
+        value: "$15"
+        metric: KeyFact
+
+  - description: "Policy lookup — monthly refund window"
+    vars:
+      query: "How long do I have to request a refund on a monthly subscription?"
+    assert:
+      - type: icontains
+        value: "14 days"
+        metric: KeyFact
+
+  - description: "Two-document question — refund window and Pro API rate limit"
+    vars:
+      query: "Can I still get a refund on my monthly plan after 3 weeks, and what is the API rate limit on Pro?"
+    assert:
+      - type: icontains-all
+        value: ["14 days", "1,000"]
+        metric: KeyFact
+
+  - description: "Grading plumbing — faithfulness judged against retrieved context"
+    vars:
+      query: "Which identity providers can I use for SSO?"
+    assert:
+      - type: icontains-all
+        value: ["Okta", "Google Workspace"]
+        metric: KeyFact
+      - type: context-faithfulness
+        contextTransform: context.metadata.retrieved_context
+        threshold: 0.8
+        metric: Faithfulness

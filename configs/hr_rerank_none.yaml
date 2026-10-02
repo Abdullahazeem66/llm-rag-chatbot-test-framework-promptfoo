@@ -1,0 +1,5 @@
+extends: hybrid_rerank
+name: hr_rerank_none
+retrieval:
+  rerank:
+    reasoning_effort: none

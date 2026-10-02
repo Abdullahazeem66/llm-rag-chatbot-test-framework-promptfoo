@@ -1,0 +1,6 @@
+extends: baseline
+name: chunk_small
+chunking:
+  strategy: recursive
+  chunk_size: 120
+  chunk_overlap: 20

@@ -1,0 +1,107 @@
+- description: "Starter plan: Zapier access and API rate limit"
+  vars:
+    query: "I'm on the Starter plan. Can I use the Zapier integration, and what is my API rate limit?"
+    reference_answer: "No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit is 300 requests per minute per workspace."
+  metadata:
+    id: mh-001
+    category: multi_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [integrations_and_api#chunk_0, integrations_and_api#chunk_2]
+    key_facts: ["| Zapier | Pro and above |", "Starter: 300 requests per minute"]
+    source: human
+    subsets: [phase5]
+
+- description: "EU data residency on Pro and when it became available"
+  vars:
+    query: "Can a Pro workspace be hosted in the EU, and since when has that been possible?"
+    reference_answer: "Yes. Pro workspaces can use the EU region in Frankfurt, Germany. It became available on Pro in version 5.1 on May 20, 2026; before that it was Enterprise only. The region is chosen when the workspace is created."
+  metadata:
+    id: mh-002
+    category: multi_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [data_retention_and_privacy#chunk_3, release_notes#chunk_1]
+    key_facts: ["Frankfurt", "May 20, 2026"]
+    source: human
+    subsets: [phase5]
+
+- description: "File size limit for the $8 plan"
+  vars:
+    query: "What is the largest single file I can attach on the plan that costs $8 per user per month?"
+    reference_answer: "The $8 per user monthly plan is Starter, which allows attachments up to 100 MB each."
+  metadata:
+    id: mh-003
+    category: multi_hop
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1, troubleshooting#chunk_1]
+    key_facts: ["| Starter | $8 |", "Starter 100 MB"]
+    source: human
+
+- description: "Support response time on cheapest plan with Timeline view"
+  vars:
+    query: "How quickly will support respond on the cheapest plan that includes the Timeline view?"
+    reference_answer: "Timeline view is available on Pro and Enterprise only, so the cheapest such plan is Pro. Pro support (email and live chat) targets a first response within 8 business hours."
+  metadata:
+    id: mh-004
+    category: multi_hop
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [product_overview#chunk_1, support_and_sla#chunk_0]
+    key_facts: ["Available on Pro and Enterprise plans only", "Within 8 business hours"]
+    source: human
+    subsets: [phase5]
+
+- description: "Guests on Starter: seats and allowance"
+  vars:
+    query: "On the Starter plan, do guests count as paid seats, and how many guests can I invite?"
+    reference_answer: "Guests do not count as paid seats. The Starter plan allows up to 5 guests."
+  metadata:
+    id: mh-005
+    category: multi_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [billing_and_refunds#chunk_0, pricing_plans#chunk_1]
+    key_facts: ["Guests do not count as paid seats", "| Starter | $8 | $6.40 | 25 | 100 GB | 5 |"]
+    source: human
+
+- description: "Enterprise SSO options and audit log retention"
+  vars:
+    query: "What single sign-on options do we get on Enterprise, and how long are audit logs kept on that plan?"
+    reference_answer: "Enterprise includes SAML 2.0 SSO with identity providers such as Okta, Microsoft Entra ID (Azure AD), Google Workspace, and OneLogin, plus SCIM 2.0 provisioning. Enterprise audit logs are kept for 1 year and can be streamed to a SIEM."
+  metadata:
+    id: mh-006
+    category: multi_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [account_security#chunk_2, account_security#chunk_4]
+    key_facts: ["SAML 2.0", "Enterprise: audit logs are kept for 1 year"]
+    source: human
+
+- description: "Automation runs for the 1 TB plan"
+  vars:
+    query: "How many automation runs per month does the plan with 1 TB of storage include?"
+    reference_answer: "The plan with 1 TB of storage is Pro, which includes 5,000 automation runs per month."
+  metadata:
+    id: mh-007
+    category: multi_hop
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1, product_overview#chunk_3]
+    key_facts: ["1 TB", "Pro: 5,000 runs per month"]
+    source: human
+
+- description: "Cheapest annual price with Brindlework AI"
+  vars:
+    query: "What is the cheapest annual per-user price for a plan that includes Brindlework AI?"
+    reference_answer: "Brindlework AI is included in Pro and Enterprise. The cheapest is Pro at $12 per user per month on annual billing."
+  metadata:
+    id: mh-008
+    category: multi_hop
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [product_overview#chunk_4, pricing_plans#chunk_1]
+    key_facts: ["Brindlework AI is included in Pro and Enterprise plans", "| Pro | $15 | $12 |"]
+    source: human
+    subsets: [phase5]

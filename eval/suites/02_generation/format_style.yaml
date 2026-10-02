@@ -1,0 +1,281 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "Generation (isolated) › Format and style — direct, concise, professional support answers without prompt leakage"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../providers/generation_only.py
+    label: generation-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: javascript
+      value: output.length <= 1200
+      metric: Concise
+    - type: not-icontains-any
+      value: ["the context", "provided context", "the documents provided", "as an ai", "language model", "<<retrieved_context>>"]
+      metric: NoPromptLeakage
+    - type: llm-rubric
+      value: |
+        Judge the response as a customer support reply. Pass if the first sentence addresses the question directly,
+        the tone is polite or neutral-professional, there is no filler or repetition, and the language is plain.
+        Short, factual answers are GOOD: the assistant is instructed to be concise, so do not require greetings,
+        empathy phrases, or offers of further help. Fail only if it is rude, evasive, rambling, repetitive, or buries the answer.
+        Citations in square brackets such as [pricing_plans#chunk_1] are expected and fine.
+      metric: Tone
+
+tests:
+  - description: Owner vs Admin role
+    vars:
+      query: What is the difference between an Owner and an Admin?
+      context: |-
+        [team_management#chunk_0] source: team_management.md | title: Team and Workspace Management | type: official | updated: 2026-03-02
+        ## Roles
+
+        Each workspace member has one role:
+
+        - **Owner:** full control, including billing, deleting the workspace, and transferring ownership. A workspace can have up to 3 Owners.
+        - **Admin:** manages members, integrations, and workspace settings, but cannot delete the workspace or change the plan.
+        - **Member:** creates and works on projects and tasks they have access to.
+        - **Guest:** external collaborator with access only to projects they are invited to.
+
+        Billing admins are Admins who have also been given billing permission; they can view invoices and update payment methods.
+      reference_answer: Owners have full control, including billing, deleting the workspace, and transferring ownership. Admins
+        manage members, integrations, and workspace settings but cannot delete the workspace or change the plan.
+    metadata:
+      id: cmp-001
+
+  - description: Pro annual vs monthly savings
+    vars:
+      query: How much does one user save per year on Pro by paying annually instead of monthly?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: Pro costs $15 per month on monthly billing ($180 per year) and $12 per month on annual billing ($144
+        per year), so annual billing saves $36 per user per year, a 20% discount.
+    metadata:
+      id: cmp-003
+
+  - description: Audit logs Pro vs Enterprise
+    vars:
+      query: Compare audit log retention between Pro and Enterprise.
+      context: |-
+        [account_security#chunk_4] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+        ## Audit logs
+
+        Audit logs record sign-ins, permission changes, exports, and deletions.
+
+        - Pro: audit logs are kept for 90 days
+        - Enterprise: audit logs are kept for 1 year and can be streamed to a SIEM
+
+        Audit logs are not available on the Free and Starter plans.
+      reference_answer: Pro keeps audit logs for 90 days. Enterprise keeps them for 1 year and can stream them to a SIEM. Free
+        and Starter do not have audit logs.
+    metadata:
+      id: cmp-005
+
+  - description: Pro annual cost for 20 users
+    vars:
+      query: What is the total yearly cost for 20 users on Pro with annual billing?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: Pro annual billing is $12 per user per month, so 20 users cost 20 x $12 x 12 = $2,880 per year, billed
+        upfront and excluding taxes.
+    metadata:
+      id: num-002
+
+  - description: Enterprise P1 response target
+    vars:
+      query: What is the response time target for a critical P1 issue on Enterprise?
+      context: |-
+        [support_and_sla#chunk_0] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+        # Support Channels and Response Times
+
+        Business hours are Monday to Friday, 08:00 to 18:00 UTC, excluding Portuguese public holidays.
+
+        | Plan | Support channels | First response target |
+        |---|---|---|
+        | Free | Help center and community forum | No guaranteed response |
+        | Starter | Email | Within 48 business hours |
+        | Pro | Email and live chat | Within 8 business hours |
+        | Enterprise | Email, live chat, and 24/7 phone | 1 hour for P1 (critical) issues, 4 hours for P2 |
+      reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+    metadata:
+      id: num-004
+
+  - description: Nonprofit Pro monthly price
+    vars:
+      query: We're a registered nonprofit. What would Pro cost us per user on monthly billing?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+
+        ---
+
+        [pricing_plans#chunk_3] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Nonprofit and education discounts
+
+        Registered nonprofits and accredited educational institutions receive a 50% discount on Starter and Pro plans. Apply through the form in Settings > Billing > Discounts. Verification usually takes up to 5 business days.
+      reference_answer: Registered nonprofits get a 50% discount on Starter and Pro. Pro is $15 per user per month on monthly
+        billing, so the nonprofit price is $7.50 per user per month.
+    metadata:
+      id: num-006
+
+  - description: Monthly refund window
+    vars:
+      query: How long do I have to request a refund on a monthly subscription?
+      context: |-
+        [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+        ## Refund policy
+
+        - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+        - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+        - Charges for extra storage add-ons are not refundable.
+        - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+        To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+      reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge.
+    metadata:
+      id: sh-002
+
+  - description: Error code E301
+    vars:
+      query: I'm getting error E301. What does it mean?
+      context: |-
+        [troubleshooting#chunk_0] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+        ## Error codes
+
+        | Code | Meaning | What to do |
+        |---|---|---|
+        | E101 | Sync conflict: the task was edited on two devices at the same time | Open the task and choose which version to keep |
+        | E204 | Attachment is larger than your plan's file size limit | Compress the file or upgrade your plan |
+        | E301 | Permission denied | Ask a project Admin to give you access |
+        | E429 | Too many requests | Wait and retry; see API rate limits |
+        | E500 | Internal server error | Check status.brindlework.example and retry later |
+      reference_answer: E301 means permission denied. Ask a project Admin to give you access.
+    metadata:
+      id: sh-004
+
+  - description: Accepted payment methods
+    vars:
+      query: Which payment methods does Brindlework accept?
+      context: |-
+        [billing_and_refunds#chunk_1] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+        ## Payment methods
+
+        Brindlework accepts Visa, Mastercard, American Express, and PayPal. Payment by bank transfer against an invoice is available for Enterprise customers and for annual Pro subscriptions with 20 or more seats.
+      reference_answer: Brindlework accepts Visa, Mastercard, American Express, and PayPal. Bank transfer against an invoice is
+        available for Enterprise customers and annual Pro subscriptions with 20 or more seats.
+    metadata:
+      id: sh-006
+
+  - description: Maximum number of Owners
+    vars:
+      query: How many Owners can a workspace have?
+      context: |-
+        [team_management#chunk_0] source: team_management.md | title: Team and Workspace Management | type: official | updated: 2026-03-02
+        ## Roles
+
+        Each workspace member has one role:
+
+        - **Owner:** full control, including billing, deleting the workspace, and transferring ownership. A workspace can have up to 3 Owners.
+        - **Admin:** manages members, integrations, and workspace settings, but cannot delete the workspace or change the plan.
+        - **Member:** creates and works on projects and tasks they have access to.
+        - **Guest:** external collaborator with access only to projects they are invited to.
+
+        Billing admins are Admins who have also been given billing permission; they can view invoices and update payment methods.
+      reference_answer: A workspace can have up to 3 Owners.
+    metadata:
+      id: sh-008
+
+  - description: API rate limit response
+    vars:
+      query: What happens when my API integration exceeds the rate limit?
+      context: |-
+        [integrations_and_api#chunk_2] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+        ## Rate limits
+
+        API rate limits are applied per workspace:
+
+        - Free: 60 requests per minute
+        - Starter: 300 requests per minute
+        - Pro: 1,000 requests per minute
+        - Enterprise: 5,000 requests per minute (higher limits available on request)
+
+        When a limit is exceeded, the API responds with HTTP status 429 and a `Retry-After` header that tells you how many seconds to wait before retrying.
+      reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+        retrying.
+    metadata:
+      id: sh-010
+
+  - description: Account lockout
+    vars:
+      query: What happens if I enter the wrong password too many times?
+      context: |-
+        [troubleshooting#chunk_4] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+        ## Cannot sign in
+
+        - If you use SSO, sign in through your company's identity provider instead of using a password.
+        - After 10 failed sign-in attempts, the account is locked for 15 minutes.
+        - If you lost your 2FA device, use one of your recovery codes.
+      reference_answer: After 10 failed sign-in attempts, the account is locked for 15 minutes.
+    metadata:
+      id: sh-012
+
+  - file://../../datasets/suites/02_generation/format_style.yaml

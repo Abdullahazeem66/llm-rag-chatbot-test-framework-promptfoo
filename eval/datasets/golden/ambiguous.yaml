@@ -1,0 +1,55 @@
+- description: "Unspecified price question"
+  vars:
+    query: "How much does it cost?"
+    reference_answer: "The question does not say which plan. The assistant should ask which plan is meant or summarize plan prices: Free $0, Starter $8 ($6.40 annual), Pro $15 ($12 annual) per user per month, Enterprise custom."
+  metadata:
+    id: amb-001
+    category: ambiguous
+    difficulty: medium
+    expected_behavior: clarify_or_cover
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Starter | $8 | $6.40 |", "| Pro | $15 | $12 |"]
+    source: human
+    subsets: [phase5]
+
+- description: "Unspecified limit question"
+  vars:
+    query: "What's the limit?"
+    reference_answer: "The question is too vague. The assistant should ask which limit is meant (for example API rate limits, storage, file size, members, or automation runs) and not guess a single number."
+  metadata:
+    id: amb-002
+    category: ambiguous
+    difficulty: medium
+    expected_behavior: clarify
+    gold_ids: []
+    key_facts: []
+    context_ids: [integrations_and_api#chunk_2, troubleshooting#chunk_1]
+    source: human
+
+- description: "Getting data back"
+  vars:
+    query: "How do I get my data back?"
+    reference_answer: "This could mean restoring deleted items or exporting data. Deleted items can be restored from the Trash within 30 days (by the person who deleted them or an Admin). Owners and Admins can export all workspace data as CSV or JSON in Settings > Workspace > Export. The assistant should cover both or ask which is meant."
+  metadata:
+    id: amb-003
+    category: ambiguous
+    difficulty: hard
+    expected_behavior: clarify_or_cover
+    gold_ids: [data_retention_and_privacy#chunk_0, data_retention_and_privacy#chunk_1]
+    key_facts: ["can be restored", "Settings > Workspace > Export"]
+    source: human
+
+- description: "Feature not specified"
+  vars:
+    query: "Is it available on Starter?"
+    reference_answer: "The question does not say which feature. The assistant should ask what feature the user means."
+  metadata:
+    id: amb-004
+    category: ambiguous
+    difficulty: easy
+    expected_behavior: clarify
+    gold_ids: []
+    key_facts: []
+    context_ids: [pricing_plans#chunk_2, integrations_and_api#chunk_0]
+    source: human
+    subsets: [phase5]

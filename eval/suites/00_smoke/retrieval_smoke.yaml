@@ -1,0 +1,44 @@
+description: "Smoke › Retrieval — retriever returns top-k ranked chunks and finds obvious targets"
+
+prompts:
+  - id: query-only
+    label: "Raw query"
+    raw: "{{query}}"
+
+providers:
+  - id: file://../../providers/retriever_only.py
+    label: retriever-baseline
+    config:
+      pipeline: baseline
+      top_k: 5
+      workers: 4
+
+defaultTest:
+  assert:
+    - type: javascript
+      value: (context.providerResponse?.metadata?.retrieved_ids || []).length === 5
+      metric: ReturnsTopK
+    - type: contains
+      value: "{{expected_id}}"
+      metric: ExpectedInTop5
+
+tests:
+  - description: "Error code table"
+    vars:
+      query: "What does error E204 mean?"
+      expected_id: "troubleshooting#chunk_0"
+
+  - description: "SSO providers"
+    vars:
+      query: "SAML single sign-on identity providers"
+      expected_id: "account_security#chunk_2"
+
+  - description: "Trash retention"
+    vars:
+      query: "How long are deleted projects kept in the trash?"
+      expected_id: "data_retention_and_privacy#chunk_0"
+
+  - description: "Support response times"
+    vars:
+      query: "What is the first response time for Pro support?"
+      expected_id: "support_and_sla#chunk_0"

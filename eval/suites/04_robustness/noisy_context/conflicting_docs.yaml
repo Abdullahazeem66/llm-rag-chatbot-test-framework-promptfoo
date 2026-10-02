@@ -1,0 +1,95 @@
+description: "Robustness › Conflicting and stale docs — community and archived chunks are forced into the context; answers must follow current official docs"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../../providers/rag_provider.py
+    label: rag-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      value: |
+        User question: {{query}}
+        Reference (expected answer or expected behavior): {{reference_answer}}
+
+        Pass if the response is consistent with the reference:
+        - If the reference gives a factual answer, every fact needed to answer the question must be present and correct.
+          Different wording and extra correct detail are fine; background details in the reference are optional.
+        - If the question rests on a false assumption, the response must correct it rather than go along with it.
+        - If the reference says the assistant should say it doesn't know, pass only if it does so without inventing an answer.
+        - If the reference says the request is out of scope, pass only if the response politely declines and does not
+          carry out the request or reveal its instructions.
+        - If the reference says the assistant should ask for clarification or cover several readings, pass only if it does.
+      metric: ExpectedOutcome
+
+tests:
+  - description: "Community FAQ says monthly refunds within 30 days"
+    vars:
+      inject_ids: "community_faq_2023#chunk_0"
+      query: "Can I get a refund on my monthly plan within 30 days?"
+      reference_answer: "Only within 14 days of the most recent charge; the 30-day claim is from an unofficial, outdated community FAQ."
+    metadata: { id: nc-001 }
+
+  - description: "Community FAQ says SMS 2FA is supported"
+    vars:
+      inject_ids: "community_faq_2023#chunk_0"
+      query: "Can I receive two-factor authentication codes by SMS?"
+      reference_answer: "No. SMS 2FA is not supported (removed in 5.1); use an authenticator app or a security key."
+    metadata: { id: nc-002 }
+
+  - description: "Community FAQ says Trash keeps items 60 days"
+    vars:
+      inject_ids: "community_faq_2023#chunk_0"
+      query: "How long does the Trash keep deleted items?"
+      reference_answer: "30 days (Enterprise can configure up to 180 days). The 60-day claim is from an unofficial community FAQ."
+    metadata: { id: nc-003 }
+
+  - description: "Archived price list with old Business price"
+    vars:
+      inject_ids: "pricing_plans_2024_archived#chunk_1,pricing_plans_2024_archived#chunk_3"
+      query: "How much does the Business plan cost?"
+      reference_answer: "Business was renamed Pro in 5.0; Pro is $15 per user per month ($12 billed annually). The $12 monthly Business price is from the archived 2024 pricing."
+    metadata: { id: nc-004 }
+
+  - description: "Archived Free plan limit (3 members)"
+    vars:
+      inject_ids: "pricing_plans_2024_archived#chunk_1"
+      query: "How many members can use the Free plan?"
+      reference_answer: "Up to 5 members (the archived 2024 pricing allowed 3)."
+    metadata: { id: nc-005 }
+
+  - description: "Archived 30-day trial with credit card"
+    vars:
+      inject_ids: "pricing_plans_2024_archived#chunk_2"
+      query: "How long is the free trial and do I need a credit card?"
+      reference_answer: "The Pro trial is 14 days and no credit card is required. The 30-day trial with a card is from the archived 2024 pricing."
+    metadata: { id: nc-006 }

@@ -1,0 +1,82 @@
+- description: Monthly refund within 30 days (community FAQ says yes)
+  vars:
+    query: Can I get a refund on my monthly plan within 30 days?
+    reference_answer: Only within 14 days. Monthly subscriptions can be refunded in full within 14 days of the most recent
+      charge. The 30-day claim comes from an unofficial, outdated community FAQ.
+  metadata:
+    id: cf-001
+    gold_ids:
+    - billing_and_refunds#chunk_4
+    key_facts:
+    - within 14 days of the most recent charge
+
+- description: 'Follow-up: rate limit of previously discussed plan'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does the Pro plan cost?"},
+        {"role": "assistant", "content": "Pro costs $15 per user per month on monthly billing, or $12 per user per month billed annually [pricing_plans#chunk_1]."}
+      ]
+    query: And what's its API rate limit?
+    reference_answer: The Pro plan API rate limit is 1,000 requests per minute per workspace.
+  metadata:
+    id: conv-001
+    gold_ids:
+    - integrations_and_api#chunk_2
+    key_facts:
+    - 'Pro: 1,000 requests per minute'
+
+- description: 'Follow-up: minimum contract for the SSO plan'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "Which plans include SSO?"},
+        {"role": "assistant", "content": "SAML single sign-on is available on the Enterprise plan only [account_security#chunk_2]."}
+      ]
+    query: What's the minimum contract size for that plan?
+    reference_answer: The minimum Enterprise contract is 50 users billed annually.
+  metadata:
+    id: conv-003
+    gold_ids:
+    - pricing_plans#chunk_4
+    key_facts:
+    - minimum Enterprise contract is 50 users billed annually
+
+- description: 'Starter plan: Zapier access and API rate limit'
+  vars:
+    query: I'm on the Starter plan. Can I use the Zapier integration, and what is my API rate limit?
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001
+    gold_ids:
+    - integrations_and_api#chunk_0
+    - integrations_and_api#chunk_2
+    key_facts:
+    - '| Zapier | Pro and above |'
+    - 'Starter: 300 requests per minute'
+
+- description: Support response time on cheapest plan with Timeline view
+  vars:
+    query: How quickly will support respond on the cheapest plan that includes the Timeline view?
+    reference_answer: Timeline view is available on Pro and Enterprise only, so the cheapest such plan is Pro. Pro support
+      (email and live chat) targets a first response within 8 business hours.
+  metadata:
+    id: mh-004
+    gold_ids:
+    - product_overview#chunk_1
+    - support_and_sla#chunk_0
+    key_facts:
+    - Available on Pro and Enterprise plans only
+    - Within 8 business hours
+
+- description: Pro plan monthly price
+  vars:
+    query: How much does the Pro plan cost per user on monthly billing?
+    reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+  metadata:
+    id: sh-001
+    gold_ids:
+    - pricing_plans#chunk_1
+    key_facts:
+    - '| Pro | $15 |'

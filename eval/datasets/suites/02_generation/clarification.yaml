@@ -1,0 +1,55 @@
+- description: Unspecified limit question
+  vars:
+    query: What's the limit?
+    context: |-
+      [integrations_and_api#chunk_2] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Rate limits
+
+      API rate limits are applied per workspace:
+
+      - Free: 60 requests per minute
+      - Starter: 300 requests per minute
+      - Pro: 1,000 requests per minute
+      - Enterprise: 5,000 requests per minute (higher limits available on request)
+
+      When a limit is exceeded, the API responds with HTTP status 429 and a `Retry-After` header that tells you how many seconds to wait before retrying.
+
+      ---
+
+      [troubleshooting#chunk_1] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+      ## File size limits
+
+      The maximum size of a single attachment depends on the plan: Free 10 MB, Starter 100 MB, Pro 250 MB, and Enterprise 2 GB.
+    reference_answer: The question is too vague. The assistant should ask which limit is meant (for example API rate limits,
+      storage, file size, members, or automation runs) and not guess a single number.
+  metadata:
+    id: amb-002
+
+- description: Feature not specified
+  vars:
+    query: Is it available on Starter?
+    context: |-
+      [pricing_plans#chunk_2] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Free trial
+
+      New workspaces can start a 14-day free trial of the Pro plan. No credit card is required to start the trial. At the end of the trial, the workspace automatically moves to the Free plan unless a paid plan is selected. If the workspace has more than 5 members when it moves to the Free plan, it becomes read-only until members are removed or a paid plan is chosen.
+
+      ---
+
+      [integrations_and_api#chunk_0] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Available integrations
+
+      | Integration | Plans | What it does |
+      |---|---|---|
+      | Slack | All plans | Task notifications in channels, create tasks from messages |
+      | Microsoft Teams | All plans | Task notifications and a personal Brindlework tab |
+      | Google Drive / Dropbox | All plans | Attach cloud files to tasks |
+      | GitHub / GitLab | Starter and above | Link commits and pull requests to tasks |
+      | Webhooks | Starter and above | Send events to your own endpoints |
+      | Zapier | Pro and above | Connect Brindlework to 5,000+ apps |
+      | Salesforce | Enterprise only | Sync opportunities to projects |
+
+      Integrations are connected by a workspace Admin or Owner in Settings > Integrations. The GitLab integration was added in version 4.8.
+    reference_answer: The question does not say which feature. The assistant should ask what feature the user means.
+  metadata:
+    id: amb-004

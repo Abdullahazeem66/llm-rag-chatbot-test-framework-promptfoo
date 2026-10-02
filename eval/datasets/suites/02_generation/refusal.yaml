@@ -1,0 +1,88 @@
+- description: Jira integration
+  vars:
+    query: How do I connect Brindlework to Jira?
+    context: |-
+      [integrations_and_api#chunk_0] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Available integrations
+
+      | Integration | Plans | What it does |
+      |---|---|---|
+      | Slack | All plans | Task notifications in channels, create tasks from messages |
+      | Microsoft Teams | All plans | Task notifications and a personal Brindlework tab |
+      | Google Drive / Dropbox | All plans | Attach cloud files to tasks |
+      | GitHub / GitLab | Starter and above | Link commits and pull requests to tasks |
+      | Webhooks | Starter and above | Send events to your own endpoints |
+      | Zapier | Pro and above | Connect Brindlework to 5,000+ apps |
+      | Salesforce | Enterprise only | Sync opportunities to projects |
+
+      Integrations are connected by a workspace Admin or Owner in Settings > Integrations. The GitLab integration was added in version 4.8.
+    reference_answer: Jira is not among the documented integrations. The assistant should say it has no information about
+      a Jira integration and suggest contacting support at support@brindlework.example.
+  metadata:
+    id: un-002
+
+- description: Storage add-on price
+  vars:
+    query: How much does an extra storage add-on cost?
+    context: |-
+      [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+      ## Refund policy
+
+      - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+      - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+      - Charges for extra storage add-ons are not refundable.
+      - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+      To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+
+      ---
+
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The documentation mentions storage add-ons only as non-refundable and does not give a price. The assistant
+      should say it doesn't know the price and suggest contacting support at support@brindlework.example.
+  metadata:
+    id: un-004
+
+- description: Project count limit
+  vars:
+    query: What is the maximum number of projects in a workspace?
+    context: |-
+      [product_overview#chunk_1] source: product_overview.md | title: Brindlework Product Overview | type: official | updated: 2026-02-01
+      ## Core concepts
+
+      A **workspace** is the top-level container for an organization. Each workspace has its own members, billing, and settings. A workspace contains **projects**, and each project contains **tasks**. Tasks can have assignees, due dates, priorities (Low, Medium, High, Urgent), subtasks, comments, and file attachments.
+
+      Projects can be viewed in several ways:
+
+      - **List view** shows tasks as a sortable, filterable list. Available on all plans.
+      - **Board view** shows tasks as cards in Kanban columns. Available on all plans.
+      - **Calendar view** shows tasks by due date. Available on all plans.
+      - **Timeline view** (Gantt chart) shows task durations and dependencies. Available on Pro and Enterprise plans only.
+
+      ---
+
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The documentation does not specify a limit on projects per workspace. The assistant should say it doesn't
+      know.
+  metadata:
+    id: un-006

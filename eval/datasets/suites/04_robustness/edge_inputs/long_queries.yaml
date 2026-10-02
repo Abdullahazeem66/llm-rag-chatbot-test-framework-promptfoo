@@ -1,0 +1,29 @@
+- description: '[long_context] Trash retention period'
+  vars:
+    query: 'Good morning. I''m the office manager at a small architecture studio in Porto and I handle most of our software
+      accounts, so I get a lot of questions from the team that I then have to look up. Anyway, here''s my actual question:
+      How long are deleted items kept in the Trash? Thanks a lot in advance, and sorry for the long message!'
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005~long_context
+
+- description: '[long_context] Starter plan: Zapier access and API rate limit'
+  vars:
+    query: 'Hi there! I''ve been using Brindlework with my team for a few months now and mostly love it, though the mobile app
+      could be faster. My manager asked me to sort out a few admin things before our quarterly review next week. Anyway, here''s
+      my actual question: I''m on the Starter plan. Can I use the Zapier integration, and what is my API rate limit? Thanks!
+      Also, keep up the good work on the product.'
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001~long_context
+
+- description: '[long_context] Enterprise P1 response target'
+  vars:
+    query: 'Hello, quick question before our planning meeting. We moved over from spreadsheets last year and everyone on the
+      design team is still getting used to boards versus lists, which is a separate story. Anyway, here''s my actual question:
+      What is the response time target for a critical P1 issue on Enterprise? Thanks! Also, keep up the good work on the product.'
+    reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+  metadata:
+    id: num-004~long_context

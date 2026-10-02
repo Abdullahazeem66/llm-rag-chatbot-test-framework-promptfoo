@@ -1,0 +1,20 @@
+name: baseline
+corpus_dir: data/corpus
+persist_dir: data/chroma
+
+chunking:
+  strategy: recursive
+  chunk_size: 400
+  chunk_overlap: 50
+
+embedding:
+  model: text-embedding-3-small
+
+retrieval:
+  mode: dense
+  top_k: 5
+
+llm:
+  model: gpt-6-luna
+  temperature: null   # reasoning model: only the default temperature is supported
+  max_tokens: 2000    # includes hidden reasoning tokens

@@ -1,0 +1,6 @@
+extends: baseline
+name: rewrite
+retrieval:
+  query_transform:
+    mode: rewrite
+    model: gpt-6-luna

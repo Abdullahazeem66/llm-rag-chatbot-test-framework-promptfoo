@@ -1,0 +1,7 @@
+extends: baseline
+name: decompose
+retrieval:
+  query_transform:
+    mode: decompose
+    model: gpt-6-luna
+    max_queries: 3

@@ -1,0 +1,606 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "Generation (isolated) › Answer relevance — the answer addresses the question that was asked"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../providers/generation_only.py
+    label: generation-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      text:
+        id: openai:gpt-6-luna
+        config: { omitDefaults: true, passthrough: { reasoning: { effort: medium } } }
+      embedding: openai:embedding:text-embedding-3-small
+  assert:
+    - type: answer-relevance
+      threshold: 0.55
+      metric: AnswerRelevance
+
+tests:
+  - description: Owner vs Admin role
+    vars:
+      query: What is the difference between an Owner and an Admin?
+      context: |-
+        [team_management#chunk_0] source: team_management.md | title: Team and Workspace Management | type: official | updated: 2026-03-02
+        ## Roles
+
+        Each workspace member has one role:
+
+        - **Owner:** full control, including billing, deleting the workspace, and transferring ownership. A workspace can have up to 3 Owners.
+        - **Admin:** manages members, integrations, and workspace settings, but cannot delete the workspace or change the plan.
+        - **Member:** creates and works on projects and tasks they have access to.
+        - **Guest:** external collaborator with access only to projects they are invited to.
+
+        Billing admins are Admins who have also been given billing permission; they can view invoices and update payment methods.
+      reference_answer: Owners have full control, including billing, deleting the workspace, and transferring ownership. Admins
+        manage members, integrations, and workspace settings but cannot delete the workspace or change the plan.
+    metadata:
+      id: cmp-001
+
+  - description: Pro annual vs monthly savings
+    vars:
+      query: How much does one user save per year on Pro by paying annually instead of monthly?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: Pro costs $15 per month on monthly billing ($180 per year) and $12 per month on annual billing ($144
+        per year), so annual billing saves $36 per user per year, a 20% discount.
+    metadata:
+      id: cmp-003
+
+  - description: Audit logs Pro vs Enterprise
+    vars:
+      query: Compare audit log retention between Pro and Enterprise.
+      context: |-
+        [account_security#chunk_4] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+        ## Audit logs
+
+        Audit logs record sign-ins, permission changes, exports, and deletions.
+
+        - Pro: audit logs are kept for 90 days
+        - Enterprise: audit logs are kept for 1 year and can be streamed to a SIEM
+
+        Audit logs are not available on the Free and Starter plans.
+      reference_answer: Pro keeps audit logs for 90 days. Enterprise keeps them for 1 year and can stream them to a SIEM. Free
+        and Starter do not have audit logs.
+    metadata:
+      id: cmp-005
+
+  - description: SMS two-factor codes
+    vars:
+      query: Can I receive two-factor authentication codes by SMS?
+      context: |-
+        [community_faq_2023#chunk_0] source: community_faq_2023.md | title: Community FAQ (unofficial) | type: community | updated: 2023-06-18
+        # Community FAQ (unofficial)
+
+        This FAQ was written by members of the Brindlework community forum. It is not an official Brindlework document and may be out of date.
+
+        **Can I get a refund on a monthly plan?**
+        Yes, in my experience Brindlework refunds monthly plans within 30 days, no questions asked.
+
+        **Does Brindlework support SMS two-factor authentication?**
+        Yes, you can get 2FA codes by SMS or with an authenticator app.
+
+        **How long does Trash keep deleted items?**
+        I think deleted items stay in Trash for 60 days.
+
+        **Is there a Gantt chart?**
+        Yes, the Timeline view is basically a Gantt chart. You need a paid plan.
+
+        **Can I use Brindlework offline?**
+        The desktop app lets you view projects you opened recently while offline, and it syncs changes when you reconnect.
+
+        ---
+
+        [account_security#chunk_1] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+        ## Two-factor authentication (2FA)
+
+        Two-factor authentication is available to every user on every plan. Brindlework supports authenticator apps (TOTP) and hardware security keys (WebAuthn / FIDO2). SMS codes are not supported.
+
+        When you enable 2FA, you receive 10 single-use recovery codes. Store them safely: if you lose access to your authenticator and your recovery codes, a workspace Owner must reset your 2FA, or, if you are the only Owner, you must contact support and verify your identity.
+
+        Admins on Pro and Enterprise plans can require 2FA for all members in Settings > Security > Authentication. Members without 2FA are asked to set it up at their next sign-in.
+
+        ---
+
+        [release_notes#chunk_1] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+        ## Version 5.1 - May 20, 2026
+
+        - EU data residency (Frankfurt) is now available on the Pro plan. Previously it was available only on Enterprise.
+        - Admins on Pro and Enterprise can require two-factor authentication for all members.
+        - SMS-based two-factor authentication has been removed. Users who relied on SMS codes must switch to an authenticator app or a security key.
+      reference_answer: No. SMS-based 2FA was removed in version 5.1 (May 20, 2026). Use an authenticator app (TOTP) or a hardware
+        security key (WebAuthn/FIDO2).
+    metadata:
+      id: cf-002
+
+  - description: Free plan member limit (archived says 3)
+    vars:
+      query: How many members can a workspace have on the Free plan?
+      context: |-
+        [pricing_plans_2024_archived#chunk_1] source: pricing_plans_2024_archived.md | title: Pricing and Plans (2024) - ARCHIVED | type: archived | updated: 2024-03-01
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) |
+        |---|---|---|---|---|
+        | Free | $0 | $0 | 3 | 1 GB |
+        | Team | $6 | $5.10 | 20 | 50 GB |
+        | Business | $12 | $10.20 | Unlimited | 500 GB |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited |
+
+        Annual billing gave a 15% discount compared to monthly billing.
+
+        ---
+
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: The Free plan allows up to 5 members (since release 5.0; the archived 2024 pricing allowed 3).
+    metadata:
+      id: cf-004
+
+  - description: 'Follow-up: rate limit of previously discussed plan'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "What does the Pro plan cost?"},
+          {"role": "assistant", "content": "Pro costs $15 per user per month on monthly billing, or $12 per user per month billed annually [pricing_plans#chunk_1]."}
+        ]
+      query: And what's its API rate limit?
+      context: |-
+        [integrations_and_api#chunk_2] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+        ## Rate limits
+
+        API rate limits are applied per workspace:
+
+        - Free: 60 requests per minute
+        - Starter: 300 requests per minute
+        - Pro: 1,000 requests per minute
+        - Enterprise: 5,000 requests per minute (higher limits available on request)
+
+        When a limit is exceeded, the API responds with HTTP status 429 and a `Retry-After` header that tells you how many seconds to wait before retrying.
+      reference_answer: The Pro plan API rate limit is 1,000 requests per minute per workspace.
+    metadata:
+      id: conv-001
+
+  - description: 'Follow-up: minimum contract for the SSO plan'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "Which plans include SSO?"},
+          {"role": "assistant", "content": "SAML single sign-on is available on the Enterprise plan only [account_security#chunk_2]."}
+        ]
+      query: What's the minimum contract size for that plan?
+      context: |-
+        [pricing_plans#chunk_4] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Enterprise
+
+        Enterprise pricing is based on the number of users and required features. Enterprise includes SSO, SCIM provisioning, custom data retention, and a dedicated customer success manager. Contact the sales team at sales@brindlework.example to get a quote. The minimum Enterprise contract is 50 users billed annually.
+      reference_answer: The minimum Enterprise contract is 50 users billed annually.
+    metadata:
+      id: conv-003
+
+  - description: Pro plan 'discontinued'
+    vars:
+      query: Why did Brindlework discontinue the Pro plan?
+      context: |-
+        [release_notes#chunk_2] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+        ## Version 5.0 - January 15, 2026
+
+        - New pricing. The Team plan was renamed Starter and the Business plan was renamed Pro. See Pricing and Plans (2026).
+        - Annual billing discount increased from 15% to 20%.
+        - Pro trial shortened from 30 days to 14 days and no longer requires a credit card.
+        - Free plan now allows up to 5 members and 2 GB of storage.
+
+        ---
+
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: 'The premise is wrong: Pro was not discontinued. In release 5.0 the Business plan was renamed Pro, and
+        Pro is a current plan at $15 per user per month ($12 billed annually).'
+    metadata:
+      id: fp-001
+
+  - description: Audit logs on Free
+    vars:
+      query: Since the Free plan includes audit logs, where can I find them?
+      context: |-
+        [account_security#chunk_4] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+        ## Audit logs
+
+        Audit logs record sign-ins, permission changes, exports, and deletions.
+
+        - Pro: audit logs are kept for 90 days
+        - Enterprise: audit logs are kept for 1 year and can be streamed to a SIEM
+
+        Audit logs are not available on the Free and Starter plans.
+      reference_answer: 'The premise is wrong: audit logs are not available on the Free or Starter plans. They are kept for
+        90 days on Pro and 1 year on Enterprise.'
+    metadata:
+      id: fp-003
+
+  - description: Annual refund 'limited to 14 days'
+    vars:
+      query: Why is my annual plan refund limited to 14 days?
+      context: |-
+        [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+        ## Refund policy
+
+        - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+        - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+        - Charges for extra storage add-ons are not refundable.
+        - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+        To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+      reference_answer: 'It isn''t: annual subscriptions can be refunded on a prorated basis within 30 days of the purchase
+        or renewal date. The 14-day window applies to monthly subscriptions.'
+    metadata:
+      id: fp-005
+
+  - description: EU data residency on Pro and when it became available
+    vars:
+      query: Can a Pro workspace be hosted in the EU, and since when has that been possible?
+      context: |-
+        [data_retention_and_privacy#chunk_3] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+        ## Data residency
+
+        Workspaces are hosted in the United States by default. An EU region (Frankfurt, Germany) is available for Pro and Enterprise workspaces. The region is selected when the workspace is created. Moving an existing workspace to a different region is only available to Enterprise customers and is done by the support team.
+
+        ---
+
+        [release_notes#chunk_1] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+        ## Version 5.1 - May 20, 2026
+
+        - EU data residency (Frankfurt) is now available on the Pro plan. Previously it was available only on Enterprise.
+        - Admins on Pro and Enterprise can require two-factor authentication for all members.
+        - SMS-based two-factor authentication has been removed. Users who relied on SMS codes must switch to an authenticator app or a security key.
+      reference_answer: Yes. Pro workspaces can use the EU region in Frankfurt, Germany. It became available on Pro in version
+        5.1 on May 20, 2026; before that it was Enterprise only. The region is chosen when the workspace is created.
+    metadata:
+      id: mh-002
+
+  - description: Support response time on cheapest plan with Timeline view
+    vars:
+      query: How quickly will support respond on the cheapest plan that includes the Timeline view?
+      context: |-
+        [product_overview#chunk_1] source: product_overview.md | title: Brindlework Product Overview | type: official | updated: 2026-02-01
+        ## Core concepts
+
+        A **workspace** is the top-level container for an organization. Each workspace has its own members, billing, and settings. A workspace contains **projects**, and each project contains **tasks**. Tasks can have assignees, due dates, priorities (Low, Medium, High, Urgent), subtasks, comments, and file attachments.
+
+        Projects can be viewed in several ways:
+
+        - **List view** shows tasks as a sortable, filterable list. Available on all plans.
+        - **Board view** shows tasks as cards in Kanban columns. Available on all plans.
+        - **Calendar view** shows tasks by due date. Available on all plans.
+        - **Timeline view** (Gantt chart) shows task durations and dependencies. Available on Pro and Enterprise plans only.
+
+        ---
+
+        [support_and_sla#chunk_0] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+        # Support Channels and Response Times
+
+        Business hours are Monday to Friday, 08:00 to 18:00 UTC, excluding Portuguese public holidays.
+
+        | Plan | Support channels | First response target |
+        |---|---|---|
+        | Free | Help center and community forum | No guaranteed response |
+        | Starter | Email | Within 48 business hours |
+        | Pro | Email and live chat | Within 8 business hours |
+        | Enterprise | Email, live chat, and 24/7 phone | 1 hour for P1 (critical) issues, 4 hours for P2 |
+      reference_answer: Timeline view is available on Pro and Enterprise only, so the cheapest such plan is Pro. Pro support
+        (email and live chat) targets a first response within 8 business hours.
+    metadata:
+      id: mh-004
+
+  - description: Enterprise SSO options and audit log retention
+    vars:
+      query: What single sign-on options do we get on Enterprise, and how long are audit logs kept on that plan?
+      context: |-
+        [account_security#chunk_2] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+        ## Single sign-on (SSO) and SCIM
+
+        SAML 2.0 single sign-on is available on the Enterprise plan only. Supported identity providers include Okta, Microsoft Entra ID (Azure AD), Google Workspace, and OneLogin. Enterprise workspaces can also use SCIM 2.0 to automatically provision and deprovision users.
+
+        ---
+
+        [account_security#chunk_4] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+        ## Audit logs
+
+        Audit logs record sign-ins, permission changes, exports, and deletions.
+
+        - Pro: audit logs are kept for 90 days
+        - Enterprise: audit logs are kept for 1 year and can be streamed to a SIEM
+
+        Audit logs are not available on the Free and Starter plans.
+      reference_answer: Enterprise includes SAML 2.0 SSO with identity providers such as Okta, Microsoft Entra ID (Azure AD),
+        Google Workspace, and OneLogin, plus SCIM 2.0 provisioning. Enterprise audit logs are kept for 1 year and can be streamed
+        to a SIEM.
+    metadata:
+      id: mh-006
+
+  - description: Cheapest annual price with Brindlework AI
+    vars:
+      query: What is the cheapest annual per-user price for a plan that includes Brindlework AI?
+      context: |-
+        [product_overview#chunk_4] source: product_overview.md | title: Brindlework Product Overview | type: official | updated: 2026-02-01
+        ## Brindlework AI
+
+        Brindlework AI can summarize long task comment threads and generate weekly project status reports. Brindlework AI is included in Pro and Enterprise plans and was released in version 5.2. Workspace admins can turn Brindlework AI off in Settings > Workspace > AI features. Customer content processed by Brindlework AI is not used to train AI models.
+
+        ---
+
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: Brindlework AI is included in Pro and Enterprise. The cheapest is Pro at $12 per user per month on annual
+        billing.
+    metadata:
+      id: mh-008
+
+  - description: Pro annual cost for 20 users
+    vars:
+      query: What is the total yearly cost for 20 users on Pro with annual billing?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: Pro annual billing is $12 per user per month, so 20 users cost 20 x $12 x 12 = $2,880 per year, billed
+        upfront and excluding taxes.
+    metadata:
+      id: num-002
+
+  - description: Enterprise P1 response target
+    vars:
+      query: What is the response time target for a critical P1 issue on Enterprise?
+      context: |-
+        [support_and_sla#chunk_0] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+        # Support Channels and Response Times
+
+        Business hours are Monday to Friday, 08:00 to 18:00 UTC, excluding Portuguese public holidays.
+
+        | Plan | Support channels | First response target |
+        |---|---|---|
+        | Free | Help center and community forum | No guaranteed response |
+        | Starter | Email | Within 48 business hours |
+        | Pro | Email and live chat | Within 8 business hours |
+        | Enterprise | Email, live chat, and 24/7 phone | 1 hour for P1 (critical) issues, 4 hours for P2 |
+      reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+    metadata:
+      id: num-004
+
+  - description: Nonprofit Pro monthly price
+    vars:
+      query: We're a registered nonprofit. What would Pro cost us per user on monthly billing?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+
+        ---
+
+        [pricing_plans#chunk_3] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Nonprofit and education discounts
+
+        Registered nonprofits and accredited educational institutions receive a 50% discount on Starter and Pro plans. Apply through the form in Settings > Billing > Discounts. Verification usually takes up to 5 business days.
+      reference_answer: Registered nonprofits get a 50% discount on Starter and Pro. Pro is $15 per user per month on monthly
+        billing, so the nonprofit price is $7.50 per user per month.
+    metadata:
+      id: num-006
+
+  - description: Monthly refund window
+    vars:
+      query: How long do I have to request a refund on a monthly subscription?
+      context: |-
+        [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+        ## Refund policy
+
+        - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+        - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+        - Charges for extra storage add-ons are not refundable.
+        - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+        To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+      reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge.
+    metadata:
+      id: sh-002
+
+  - description: Error code E301
+    vars:
+      query: I'm getting error E301. What does it mean?
+      context: |-
+        [troubleshooting#chunk_0] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+        ## Error codes
+
+        | Code | Meaning | What to do |
+        |---|---|---|
+        | E101 | Sync conflict: the task was edited on two devices at the same time | Open the task and choose which version to keep |
+        | E204 | Attachment is larger than your plan's file size limit | Compress the file or upgrade your plan |
+        | E301 | Permission denied | Ask a project Admin to give you access |
+        | E429 | Too many requests | Wait and retry; see API rate limits |
+        | E500 | Internal server error | Check status.brindlework.example and retry later |
+      reference_answer: E301 means permission denied. Ask a project Admin to give you access.
+    metadata:
+      id: sh-004
+
+  - description: Accepted payment methods
+    vars:
+      query: Which payment methods does Brindlework accept?
+      context: |-
+        [billing_and_refunds#chunk_1] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+        ## Payment methods
+
+        Brindlework accepts Visa, Mastercard, American Express, and PayPal. Payment by bank transfer against an invoice is available for Enterprise customers and for annual Pro subscriptions with 20 or more seats.
+      reference_answer: Brindlework accepts Visa, Mastercard, American Express, and PayPal. Bank transfer against an invoice is
+        available for Enterprise customers and annual Pro subscriptions with 20 or more seats.
+    metadata:
+      id: sh-006
+
+  - description: Maximum number of Owners
+    vars:
+      query: How many Owners can a workspace have?
+      context: |-
+        [team_management#chunk_0] source: team_management.md | title: Team and Workspace Management | type: official | updated: 2026-03-02
+        ## Roles
+
+        Each workspace member has one role:
+
+        - **Owner:** full control, including billing, deleting the workspace, and transferring ownership. A workspace can have up to 3 Owners.
+        - **Admin:** manages members, integrations, and workspace settings, but cannot delete the workspace or change the plan.
+        - **Member:** creates and works on projects and tasks they have access to.
+        - **Guest:** external collaborator with access only to projects they are invited to.
+
+        Billing admins are Admins who have also been given billing permission; they can view invoices and update payment methods.
+      reference_answer: A workspace can have up to 3 Owners.
+    metadata:
+      id: sh-008
+
+  - description: API rate limit response
+    vars:
+      query: What happens when my API integration exceeds the rate limit?
+      context: |-
+        [integrations_and_api#chunk_2] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+        ## Rate limits
+
+        API rate limits are applied per workspace:
+
+        - Free: 60 requests per minute
+        - Starter: 300 requests per minute
+        - Pro: 1,000 requests per minute
+        - Enterprise: 5,000 requests per minute (higher limits available on request)
+
+        When a limit is exceeded, the API responds with HTTP status 429 and a `Retry-After` header that tells you how many seconds to wait before retrying.
+      reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+        retrying.
+    metadata:
+      id: sh-010
+
+  - description: Account lockout
+    vars:
+      query: What happens if I enter the wrong password too many times?
+      context: |-
+        [troubleshooting#chunk_4] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+        ## Cannot sign in
+
+        - If you use SSO, sign in through your company's identity provider instead of using a password.
+        - After 10 failed sign-in attempts, the account is locked for 15 minutes.
+        - If you lost your 2FA device, use one of your recovery codes.
+      reference_answer: After 10 failed sign-in attempts, the account is locked for 15 minutes.
+    metadata:
+      id: sh-012
+
+  - description: Pro trial length before 2026
+    vars:
+      query: How long was the Pro trial before the January 2026 pricing change?
+      context: |-
+        [release_notes#chunk_2] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+        ## Version 5.0 - January 15, 2026
+
+        - New pricing. The Team plan was renamed Starter and the Business plan was renamed Pro. See Pricing and Plans (2026).
+        - Annual billing discount increased from 15% to 20%.
+        - Pro trial shortened from 30 days to 14 days and no longer requires a credit card.
+        - Free plan now allows up to 5 members and 2 GB of storage.
+      reference_answer: Before release 5.0 (January 15, 2026) the trial was 30 days (on the Business plan, since renamed Pro)
+        and required a credit card. It is now 14 days with no credit card required.
+    metadata:
+      id: tmp-002
+
+  - description: Old desktop version cannot sync
+    vars:
+      query: My desktop app is version 4.3 and it won't sync. Why?
+      context: |-
+        [troubleshooting#chunk_2] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+        ## Desktop app is not syncing
+
+        1. Check that you are online and that status.brindlework.example shows no incidents.
+        2. Sign out and sign back in.
+        3. Clear the local cache: open Help > Troubleshooting > Clear cache. This does not delete any data stored on Brindlework servers.
+        4. Update to the latest version. Desktop app versions older than 4.5 are no longer supported and cannot sync.
+
+        ---
+
+        [release_notes#chunk_4] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+        ## Version 4.5 - April 9, 2025
+
+        - New desktop sync engine. Desktop versions older than 4.5 can no longer sync.
+      reference_answer: Desktop versions older than 4.5 are no longer supported and cannot sync, because version 4.5 (April
+        9, 2025) introduced a new sync engine. Update to the latest version.
+    metadata:
+      id: tmp-004
+
+  - file://../../datasets/suites/02_generation/answer_relevance.yaml

@@ -1,0 +1,73 @@
+description: "End to end › Consistency — each question runs 3 times; the key fact must appear every time (no judge)"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../providers/rag_provider.py
+    label: rag-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+evaluateOptions:
+  repeat: 3
+
+tests:
+  - description: "How much does the Pro plan cost per user on monthly billing?"
+    vars: { query: "How much does the Pro plan cost per user on monthly billing?" }
+    metadata: { id: cs-001 }
+    assert:
+      - type: icontains
+        value: "$15"
+        metric: KeyFact
+
+  - description: "How long does a workspace invitation stay valid?"
+    vars: { query: "How long does a workspace invitation stay valid?" }
+    metadata: { id: cs-002 }
+    assert:
+      - type: icontains
+        value: "7 days"
+        metric: KeyFact
+
+  - description: "What is the minimum password length?"
+    vars: { query: "What is the minimum password length?" }
+    metadata: { id: cs-003 }
+    assert:
+      - type: icontains
+        value: "12"
+        metric: KeyFact
+
+  - description: "Where is Brindlework headquartered?"
+    vars: { query: "Where is Brindlework headquartered?" }
+    metadata: { id: cs-004 }
+    assert:
+      - type: icontains
+        value: "Lisbon"
+        metric: KeyFact
+
+  - description: "What does error E301 mean?"
+    vars: { query: "What does error E301 mean?" }
+    metadata: { id: cs-005 }
+    assert:
+      - type: icontains
+        value: "permission"
+        metric: KeyFact

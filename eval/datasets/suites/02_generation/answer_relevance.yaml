@@ -1,0 +1,527 @@
+- description: Starter vs Pro support response
+  vars:
+    query: How do support channels and response times differ between Starter and Pro?
+    context: |-
+      [support_and_sla#chunk_0] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+      # Support Channels and Response Times
+
+      Business hours are Monday to Friday, 08:00 to 18:00 UTC, excluding Portuguese public holidays.
+
+      | Plan | Support channels | First response target |
+      |---|---|---|
+      | Free | Help center and community forum | No guaranteed response |
+      | Starter | Email | Within 48 business hours |
+      | Pro | Email and live chat | Within 8 business hours |
+      | Enterprise | Email, live chat, and 24/7 phone | 1 hour for P1 (critical) issues, 4 hours for P2 |
+    reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+      with a first response within 8 business hours.
+  metadata:
+    id: cmp-002
+
+- description: Monthly vs annual refund rules
+  vars:
+    query: How are refunds different for monthly and annual subscriptions?
+    context: |-
+      [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+      ## Refund policy
+
+      - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+      - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+      - Charges for extra storage add-ons are not refundable.
+      - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+      To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+    reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge. Annual subscriptions
+      can be refunded on a prorated basis within 30 days of the purchase or renewal date; after that they are not refundable,
+      but auto-renewal can be turned off.
+  metadata:
+    id: cmp-004
+
+- description: Monthly refund within 30 days (community FAQ says yes)
+  vars:
+    query: Can I get a refund on my monthly plan within 30 days?
+    context: |-
+      [community_faq_2023#chunk_0] source: community_faq_2023.md | title: Community FAQ (unofficial) | type: community | updated: 2023-06-18
+      # Community FAQ (unofficial)
+
+      This FAQ was written by members of the Brindlework community forum. It is not an official Brindlework document and may be out of date.
+
+      **Can I get a refund on a monthly plan?**
+      Yes, in my experience Brindlework refunds monthly plans within 30 days, no questions asked.
+
+      **Does Brindlework support SMS two-factor authentication?**
+      Yes, you can get 2FA codes by SMS or with an authenticator app.
+
+      **How long does Trash keep deleted items?**
+      I think deleted items stay in Trash for 60 days.
+
+      **Is there a Gantt chart?**
+      Yes, the Timeline view is basically a Gantt chart. You need a paid plan.
+
+      **Can I use Brindlework offline?**
+      The desktop app lets you view projects you opened recently while offline, and it syncs changes when you reconnect.
+
+      ---
+
+      [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+      ## Refund policy
+
+      - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+      - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+      - Charges for extra storage add-ons are not refundable.
+      - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+      To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+    reference_answer: Only within 14 days. Monthly subscriptions can be refunded in full within 14 days of the most recent
+      charge. The 30-day claim comes from an unofficial, outdated community FAQ.
+  metadata:
+    id: cf-001
+
+- description: Legacy Business plan price
+  vars:
+    query: How much does the Business plan cost?
+    context: |-
+      [pricing_plans_2024_archived#chunk_1] source: pricing_plans_2024_archived.md | title: Pricing and Plans (2024) - ARCHIVED | type: archived | updated: 2024-03-01
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) |
+      |---|---|---|---|---|
+      | Free | $0 | $0 | 3 | 1 GB |
+      | Team | $6 | $5.10 | 20 | 50 GB |
+      | Business | $12 | $10.20 | Unlimited | 500 GB |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited |
+
+      Annual billing gave a 15% discount compared to monthly billing.
+
+      ---
+
+      [release_notes#chunk_2] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+      ## Version 5.0 - January 15, 2026
+
+      - New pricing. The Team plan was renamed Starter and the Business plan was renamed Pro. See Pricing and Plans (2026).
+      - Annual billing discount increased from 15% to 20%.
+      - Pro trial shortened from 30 days to 14 days and no longer requires a credit card.
+      - Free plan now allows up to 5 members and 2 GB of storage.
+
+      ---
+
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The Business plan was renamed Pro in release 5.0 (January 15, 2026). Pro costs $15 per user per month
+      on monthly billing or $12 per user per month billed annually. Under the archived 2024 pricing, Business was $12 monthly,
+      and legacy customers keep that price until their next renewal after January 15, 2027.
+  metadata:
+    id: cf-003
+
+- description: Trash retention (community FAQ says 60 days)
+  vars:
+    query: Is it true that deleted items stay in the Trash for 60 days?
+    context: |-
+      [community_faq_2023#chunk_0] source: community_faq_2023.md | title: Community FAQ (unofficial) | type: community | updated: 2023-06-18
+      # Community FAQ (unofficial)
+
+      This FAQ was written by members of the Brindlework community forum. It is not an official Brindlework document and may be out of date.
+
+      **Can I get a refund on a monthly plan?**
+      Yes, in my experience Brindlework refunds monthly plans within 30 days, no questions asked.
+
+      **Does Brindlework support SMS two-factor authentication?**
+      Yes, you can get 2FA codes by SMS or with an authenticator app.
+
+      **How long does Trash keep deleted items?**
+      I think deleted items stay in Trash for 60 days.
+
+      **Is there a Gantt chart?**
+      Yes, the Timeline view is basically a Gantt chart. You need a paid plan.
+
+      **Can I use Brindlework offline?**
+      The desktop app lets you view projects you opened recently while offline, and it syncs changes when you reconnect.
+
+      ---
+
+      [data_retention_and_privacy#chunk_0] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+      ## Trash
+
+      Deleted tasks, projects, and files are moved to the Trash. Items in the Trash are kept for 30 days and can be restored by the person who deleted them or by a workspace Admin. After 30 days they are permanently deleted. Enterprise workspaces can configure Trash retention of up to 180 days.
+    reference_answer: No. Deleted items stay in the Trash for 30 days (Enterprise can configure up to 180 days). The 60-day
+      figure comes from an unofficial community FAQ.
+  metadata:
+    id: cf-005
+
+- description: 'Follow-up: extending Trash retention'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "How long do deleted items stay in the Trash?"},
+        {"role": "assistant", "content": "Deleted items stay in the Trash for 30 days and are then permanently deleted [data_retention_and_privacy#chunk_0]."}
+      ]
+    query: Can that be extended?
+    context: |-
+      [data_retention_and_privacy#chunk_0] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+      ## Trash
+
+      Deleted tasks, projects, and files are moved to the Trash. Items in the Trash are kept for 30 days and can be restored by the person who deleted them or by a workspace Admin. After 30 days they are permanently deleted. Enterprise workspaces can configure Trash retention of up to 180 days.
+    reference_answer: Yes, on Enterprise. Enterprise workspaces can configure Trash retention of up to 180 days.
+  metadata:
+    id: conv-002
+
+- description: 'Follow-up: file limit on Free after error E204'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does error E204 mean?"},
+        {"role": "assistant", "content": "E204 means the attachment is larger than your plan's file size limit. Compress the file or upgrade your plan [troubleshooting#chunk_0]."}
+      ]
+    query: What's the limit on the Free plan?
+    context: |-
+      [troubleshooting#chunk_1] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+      ## File size limits
+
+      The maximum size of a single attachment depends on the plan: Free 10 MB, Starter 100 MB, Pro 250 MB, and Enterprise 2 GB.
+    reference_answer: On the Free plan the maximum size of a single attachment is 10 MB.
+  metadata:
+    id: conv-004
+
+- description: Enabling SMS 2FA
+  vars:
+    query: How do I turn on SMS codes for two-factor authentication?
+    context: |-
+      [account_security#chunk_1] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+      ## Two-factor authentication (2FA)
+
+      Two-factor authentication is available to every user on every plan. Brindlework supports authenticator apps (TOTP) and hardware security keys (WebAuthn / FIDO2). SMS codes are not supported.
+
+      When you enable 2FA, you receive 10 single-use recovery codes. Store them safely: if you lose access to your authenticator and your recovery codes, a workspace Owner must reset your 2FA, or, if you are the only Owner, you must contact support and verify your identity.
+
+      Admins on Pro and Enterprise plans can require 2FA for all members in Settings > Security > Authentication. Members without 2FA are asked to set it up at their next sign-in.
+    reference_answer: SMS codes are not supported (SMS 2FA was removed in version 5.1). Use an authenticator app (TOTP) or
+      a hardware security key instead.
+  metadata:
+    id: fp-002
+
+- description: Phone support on Starter
+  vars:
+    query: What's the phone number for Starter plan phone support?
+    context: |-
+      [support_and_sla#chunk_0] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+      # Support Channels and Response Times
+
+      Business hours are Monday to Friday, 08:00 to 18:00 UTC, excluding Portuguese public holidays.
+
+      | Plan | Support channels | First response target |
+      |---|---|---|
+      | Free | Help center and community forum | No guaranteed response |
+      | Starter | Email | Within 48 business hours |
+      | Pro | Email and live chat | Within 8 business hours |
+      | Enterprise | Email, live chat, and 24/7 phone | 1 hour for P1 (critical) issues, 4 hours for P2 |
+    reference_answer: Starter does not include phone support; 24/7 phone support is Enterprise only. Starter support is by
+      email with a first response within 48 business hours.
+  metadata:
+    id: fp-004
+
+- description: 'Starter plan: Zapier access and API rate limit'
+  vars:
+    query: I'm on the Starter plan. Can I use the Zapier integration, and what is my API rate limit?
+    context: |-
+      [integrations_and_api#chunk_0] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Available integrations
+
+      | Integration | Plans | What it does |
+      |---|---|---|
+      | Slack | All plans | Task notifications in channels, create tasks from messages |
+      | Microsoft Teams | All plans | Task notifications and a personal Brindlework tab |
+      | Google Drive / Dropbox | All plans | Attach cloud files to tasks |
+      | GitHub / GitLab | Starter and above | Link commits and pull requests to tasks |
+      | Webhooks | Starter and above | Send events to your own endpoints |
+      | Zapier | Pro and above | Connect Brindlework to 5,000+ apps |
+      | Salesforce | Enterprise only | Sync opportunities to projects |
+
+      Integrations are connected by a workspace Admin or Owner in Settings > Integrations. The GitLab integration was added in version 4.8.
+
+      ---
+
+      [integrations_and_api#chunk_2] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Rate limits
+
+      API rate limits are applied per workspace:
+
+      - Free: 60 requests per minute
+      - Starter: 300 requests per minute
+      - Pro: 1,000 requests per minute
+      - Enterprise: 5,000 requests per minute (higher limits available on request)
+
+      When a limit is exceeded, the API responds with HTTP status 429 and a `Retry-After` header that tells you how many seconds to wait before retrying.
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001
+
+- description: File size limit for the $8 plan
+  vars:
+    query: What is the largest single file I can attach on the plan that costs $8 per user per month?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+
+      ---
+
+      [troubleshooting#chunk_1] source: troubleshooting.md | title: Troubleshooting Guide | type: official | updated: 2026-07-01
+      ## File size limits
+
+      The maximum size of a single attachment depends on the plan: Free 10 MB, Starter 100 MB, Pro 250 MB, and Enterprise 2 GB.
+    reference_answer: The $8 per user monthly plan is Starter, which allows attachments up to 100 MB each.
+  metadata:
+    id: mh-003
+
+- description: 'Guests on Starter: seats and allowance'
+  vars:
+    query: On the Starter plan, do guests count as paid seats, and how many guests can I invite?
+    context: |-
+      [billing_and_refunds#chunk_0] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+      ## How billing works
+
+      Brindlework bills per member seat. Guests do not count as paid seats. Monthly plans are charged on the same calendar day each month as the original purchase. Annual plans are charged once per year, upfront.
+
+      Invoices are available in Settings > Billing > Invoices and are also emailed to the billing contact. You can add a VAT or tax ID and a company address to invoices from the same page. Changes to invoice details apply only to future invoices.
+
+      ---
+
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: Guests do not count as paid seats. The Starter plan allows up to 5 guests.
+  metadata:
+    id: mh-005
+
+- description: Automation runs for the 1 TB plan
+  vars:
+    query: How many automation runs per month does the plan with 1 TB of storage include?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+
+      ---
+
+      [product_overview#chunk_3] source: product_overview.md | title: Brindlework Product Overview | type: official | updated: 2026-02-01
+      ## Automations
+
+      Automations run actions when a trigger fires, for example "when a task moves to Done, notify the project owner". Automation runs are limited per workspace per month:
+
+      - Free: automations are not available
+      - Starter: 250 runs per month
+      - Pro: 5,000 runs per month
+      - Enterprise: unlimited runs
+
+      Unused runs do not carry over to the next month. When the limit is reached, automations pause until the next billing month begins.
+    reference_answer: The plan with 1 TB of storage is Pro, which includes 5,000 automation runs per month.
+  metadata:
+    id: mh-007
+
+- description: Starter monthly cost for 10 users
+  vars:
+    query: How much would 10 users on the Starter plan cost per month with monthly billing?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: Starter is $8 per user per month on monthly billing, so 10 users cost $80 per month, excluding taxes.
+  metadata:
+    id: num-001
+
+- description: Starter member limit
+  vars:
+    query: What is the maximum number of members on the Starter plan?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The Starter plan allows up to 25 members.
+  metadata:
+    id: num-003
+
+- description: Service credit for 98.5% uptime
+  vars:
+    query: Our Enterprise uptime last month was 98.5%. What service credit do we get?
+    context: |-
+      [support_and_sla#chunk_2] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+      ## Uptime commitment
+
+      Brindlework targets 99.9% monthly uptime for all paid plans. Enterprise contracts include a 99.95% uptime SLA with service credits: 10% of the monthly fee if uptime falls below 99.95%, and 25% if it falls below 99.0%. Service status is published at status.brindlework.example.
+    reference_answer: Uptime below 99.0% qualifies for a service credit of 25% of the monthly fee under the Enterprise 99.95%
+      uptime SLA.
+  metadata:
+    id: num-005
+
+- description: Pro plan monthly price
+  vars:
+    query: How much does the Pro plan cost per user on monthly billing?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+  metadata:
+    id: sh-001
+
+- description: Minimum password length
+  vars:
+    query: What is the minimum password length?
+    context: |-
+      [account_security#chunk_0] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+      ## Passwords
+
+      Passwords must be at least 12 characters long and cannot match any of your last 5 passwords. Brindlework checks new passwords against known breached password lists. You can reset your password from the sign-in page using "Forgot password"; the reset link expires after 1 hour.
+    reference_answer: Passwords must be at least 12 characters long and cannot match any of your last 5 passwords.
+  metadata:
+    id: sh-003
+
+- description: Trash retention period
+  vars:
+    query: How long are deleted items kept in the Trash?
+    context: |-
+      [data_retention_and_privacy#chunk_0] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+      ## Trash
+
+      Deleted tasks, projects, and files are moved to the Trash. Items in the Trash are kept for 30 days and can be restored by the person who deleted them or by a workspace Admin. After 30 days they are permanently deleted. Enterprise workspaces can configure Trash retention of up to 180 days.
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005
+
+- description: Invitation expiry
+  vars:
+    query: How long does a workspace invitation stay valid?
+    context: |-
+      [team_management#chunk_1] source: team_management.md | title: Team and Workspace Management | type: official | updated: 2026-03-02
+      ## Inviting people
+
+      Owners and Admins can invite people by email in Settings > Members > Invite. Invitations expire after 7 days. On the Starter plan and above, admins can also allow anyone with an email address from an approved domain to join the workspace automatically.
+    reference_answer: Invitations expire after 7 days.
+  metadata:
+    id: sh-007
+
+- description: Company headquarters
+  vars:
+    query: Where is Brindlework headquartered?
+    context: |-
+      [product_overview#chunk_0] source: product_overview.md | title: Brindlework Product Overview | type: official | updated: 2026-02-01
+      # Brindlework Product Overview
+
+      Brindlework is a project management and team collaboration platform for teams of every size. It was founded in 2019 and is headquartered in Lisbon, Portugal. Brindlework is available on the web, as desktop apps for Windows and macOS, and as mobile apps for iOS and Android.
+    reference_answer: Brindlework is headquartered in Lisbon, Portugal.
+  metadata:
+    id: sh-009
+
+- description: Webhook signing
+  vars:
+    query: How can I verify that a webhook request really came from Brindlework?
+    context: |-
+      [integrations_and_api#chunk_3] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Webhooks
+
+      Webhooks send an HTTP POST request to your endpoint for events such as task.created, task.updated, and task.completed. Each request is signed with an HMAC-SHA256 signature in the `X-Brindlework-Signature` header. If your endpoint does not return a 2xx status, Brindlework retries up to 5 times with exponential backoff over about 1 hour.
+    reference_answer: Each webhook request is signed with an HMAC-SHA256 signature sent in the X-Brindlework-Signature header.
+  metadata:
+    id: sh-011
+
+- description: Brindlework AI release date
+  vars:
+    query: When was Brindlework AI released?
+    context: |-
+      [release_notes#chunk_0] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+      ## Version 5.2 - August 12, 2026
+
+      - Brindlework AI: summarize task comment threads and generate weekly project status reports. Available on Pro and Enterprise.
+      - Timeline view now supports task dependencies across projects.
+      - Microsoft Teams integration adds a personal Brindlework tab.
+    reference_answer: Brindlework AI was released in version 5.2 on August 12, 2026.
+  metadata:
+    id: tmp-001
+
+- description: Recurring tasks introduction
+  vars:
+    query: In which version and when were recurring tasks introduced?
+    context: |-
+      [release_notes#chunk_3] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+      ## Version 4.8 - October 2, 2025
+
+      - Recurring tasks.
+      - GitLab integration.
+      - Calendar view performance improvements.
+    reference_answer: Recurring tasks were introduced in version 4.8, released on October 2, 2025.
+  metadata:
+    id: tmp-003
+
+- description: Annual discount change in 5.0
+  vars:
+    query: How did the annual billing discount change in release 5.0?
+    context: |-
+      [release_notes#chunk_2] source: release_notes.md | title: Release Notes | type: official | updated: 2026-08-12
+      ## Version 5.0 - January 15, 2026
+
+      - New pricing. The Team plan was renamed Starter and the Business plan was renamed Pro. See Pricing and Plans (2026).
+      - Annual billing discount increased from 15% to 20%.
+      - Pro trial shortened from 30 days to 14 days and no longer requires a credit card.
+      - Free plan now allows up to 5 members and 2 GB of storage.
+    reference_answer: Release 5.0 (January 15, 2026) increased the annual billing discount from 15% to 20%.
+  metadata:
+    id: tmp-005

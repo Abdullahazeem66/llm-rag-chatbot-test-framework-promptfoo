@@ -1,0 +1,7 @@
+extends: hybrid
+name: hybrid_rerank
+retrieval:
+  rerank:
+    enabled: true
+    model: gpt-6-luna
+    candidates: 20

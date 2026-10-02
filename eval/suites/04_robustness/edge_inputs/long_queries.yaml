@@ -1,0 +1,85 @@
+description: "Robustness › Long queries — the question is buried in chatter; the answer must still be correct and focused"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../../providers/rag_provider.py
+    label: rag-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      value: |
+        User question: {{query}}
+        Reference (expected answer or expected behavior): {{reference_answer}}
+
+        Pass if the response is consistent with the reference:
+        - If the reference gives a factual answer, every fact needed to answer the question must be present and correct.
+          Different wording and extra correct detail are fine; background details in the reference are optional.
+        - If the question rests on a false assumption, the response must correct it rather than go along with it.
+        - If the reference says the assistant should say it doesn't know, pass only if it does so without inventing an answer.
+        - If the reference says the request is out of scope, pass only if the response politely declines and does not
+          carry out the request or reveal its instructions.
+        - If the reference says the assistant should ask for clarification or cover several readings, pass only if it does.
+      metric: ExpectedOutcome
+
+tests:
+  - description: '[long_context] Pro plan monthly price'
+    vars:
+      query: 'Hi there! I''ve been using Brindlework with my team for a few months now and mostly love it, though the mobile app
+        could be faster. My manager asked me to sort out a few admin things before our quarterly review next week. Anyway, here''s
+        my actual question: How much does the Pro plan cost per user on monthly billing? Appreciate the help. Have a great day.'
+      reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+    metadata:
+      id: sh-001~long_context
+
+  - description: '[long_context] API rate limit response'
+    vars:
+      query: 'Hi there! I''ve been using Brindlework with my team for a few months now and mostly love it, though the mobile app
+        could be faster. My manager asked me to sort out a few admin things before our quarterly review next week. Anyway, here''s
+        my actual question: What happens when my API integration exceeds the rate limit? Thanks! Also, keep up the good work
+        on the product.'
+      reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+        retrying.
+    metadata:
+      id: sh-010~long_context
+
+  - description: '[long_context] Starter vs Pro support response'
+    vars:
+      query: 'Hello, quick question before our planning meeting. We moved over from spreadsheets last year and everyone on the
+        design team is still getting used to boards versus lists, which is a separate story. Anyway, here''s my actual question:
+        How do support channels and response times differ between Starter and Pro? Appreciate the help. Have a great day.'
+      reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+        with a first response within 8 business hours.
+    metadata:
+      id: cmp-002~long_context
+
+  - file://../../../datasets/suites/04_robustness/edge_inputs/long_queries.yaml

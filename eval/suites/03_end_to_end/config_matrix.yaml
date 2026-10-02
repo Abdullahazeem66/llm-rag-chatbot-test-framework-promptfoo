@@ -1,0 +1,155 @@
+description: "End to end › Config matrix — pipeline (baseline / hybrid_rerank / tuned) × prompt (v1 vs v2) on every golden case: expected outcome, citations, latency, cost"
+
+prompts:
+  - id: bree-default-v1
+    label: "prompt-v1"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+  - id: bree-clarify-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../providers/rag_provider.py
+    label: baseline
+    config: { pipeline: baseline, pinned: true, workers: 4 }
+  - id: file://../../providers/rag_provider.py
+    label: hybrid_rerank
+    config: { pipeline: hybrid_rerank, pinned: true, workers: 4 }
+  - id: file://../../providers/rag_provider.py
+    label: hr_rerank_low
+    config: { pipeline: hr_rerank_low, pinned: true, workers: 4 }
+  - id: file://../../providers/rag_provider.py
+    label: hr_fast
+    config: { pipeline: hr_fast, pinned: true, workers: 4 }
+  - id: file://../../providers/rag_provider.py
+    label: tuned
+    config: { pipeline: tuned, pinned: true, workers: 4 }
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      value: |
+        User question: {{query}}
+        Reference (expected answer or expected behavior): {{reference_answer}}
+
+        Pass if the response is consistent with the reference:
+        - If the reference gives a factual answer, every fact needed to answer the question must be present and correct.
+          Different wording and extra correct detail are fine; background details in the reference are optional.
+        - If the reference says the assistant should say it doesn't know, pass only if it does so without inventing an answer.
+        - If the reference says the assistant should ask for clarification or cover several readings, pass only if it does.
+      metric: ExpectedOutcome
+    - type: latency
+      threshold: 15000
+      metric: Latency
+    - type: cost
+      threshold: 0.005
+      metric: Cost
+
+tests:
+  - description: Unspecified price question
+    vars:
+      query: How much does it cost?
+      reference_answer: 'The question does not say which plan. The assistant should ask which plan is meant or summarize plan
+        prices: Free $0, Starter $8 ($6.40 annual), Pro $15 ($12 annual) per user per month, Enterprise custom.'
+    metadata:
+      id: amb-001
+
+  - description: Monthly refund within 30 days (community FAQ says yes)
+    vars:
+      query: Can I get a refund on my monthly plan within 30 days?
+      reference_answer: Only within 14 days. Monthly subscriptions can be refunded in full within 14 days of the most recent
+        charge. The 30-day claim comes from an unofficial, outdated community FAQ.
+    metadata:
+      id: cf-001
+
+  - description: 'Follow-up: rate limit of previously discussed plan'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "What does the Pro plan cost?"},
+          {"role": "assistant", "content": "Pro costs $15 per user per month on monthly billing, or $12 per user per month billed annually [pricing_plans#chunk_1]."}
+        ]
+      query: And what's its API rate limit?
+      reference_answer: The Pro plan API rate limit is 1,000 requests per minute per workspace.
+    metadata:
+      id: conv-001
+
+  - description: 'Follow-up: minimum contract for the SSO plan'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "Which plans include SSO?"},
+          {"role": "assistant", "content": "SAML single sign-on is available on the Enterprise plan only [account_security#chunk_2]."}
+        ]
+      query: What's the minimum contract size for that plan?
+      reference_answer: The minimum Enterprise contract is 50 users billed annually.
+    metadata:
+      id: conv-003
+
+  - description: 'Starter plan: Zapier access and API rate limit'
+    vars:
+      query: I'm on the Starter plan. Can I use the Zapier integration, and what is my API rate limit?
+      reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+        is 300 requests per minute per workspace.
+    metadata:
+      id: mh-001
+
+  - description: Support response time on cheapest plan with Timeline view
+    vars:
+      query: How quickly will support respond on the cheapest plan that includes the Timeline view?
+      reference_answer: Timeline view is available on Pro and Enterprise only, so the cheapest such plan is Pro. Pro support
+        (email and live chat) targets a first response within 8 business hours.
+    metadata:
+      id: mh-004
+
+  - description: Pro plan monthly price
+    vars:
+      query: How much does the Pro plan cost per user on monthly billing?
+      reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+    metadata:
+      id: sh-001
+
+  - description: Jira integration
+    vars:
+      query: How do I connect Brindlework to Jira?
+      reference_answer: Jira is not among the documented integrations. The assistant should say it has no information about
+        a Jira integration and suggest contacting support at support@brindlework.example.
+    metadata:
+      id: un-002
+
+  - file://../../datasets/suites/03_end_to_end/config_matrix.yaml

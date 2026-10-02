@@ -1,0 +1,64 @@
+- description: "Pro plan 'discontinued'"
+  vars:
+    query: "Why did Brindlework discontinue the Pro plan?"
+    reference_answer: "The premise is wrong: Pro was not discontinued. In release 5.0 the Business plan was renamed Pro, and Pro is a current plan at $15 per user per month ($12 billed annually)."
+  metadata:
+    id: fp-001
+    category: false_premise
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [release_notes#chunk_2, pricing_plans#chunk_1]
+    key_facts: ["the Business plan was renamed Pro", "| Pro | $15 |"]
+    source: human
+
+- description: "Enabling SMS 2FA"
+  vars:
+    query: "How do I turn on SMS codes for two-factor authentication?"
+    reference_answer: "SMS codes are not supported (SMS 2FA was removed in version 5.1). Use an authenticator app (TOTP) or a hardware security key instead."
+  metadata:
+    id: fp-002
+    category: false_premise
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [account_security#chunk_1]
+    key_facts: ["SMS codes are not supported"]
+    source: human
+
+- description: "Audit logs on Free"
+  vars:
+    query: "Since the Free plan includes audit logs, where can I find them?"
+    reference_answer: "The premise is wrong: audit logs are not available on the Free or Starter plans. They are kept for 90 days on Pro and 1 year on Enterprise."
+  metadata:
+    id: fp-003
+    category: false_premise
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [account_security#chunk_4]
+    key_facts: ["Audit logs are not available on the Free and Starter plans"]
+    source: human
+
+- description: "Phone support on Starter"
+  vars:
+    query: "What's the phone number for Starter plan phone support?"
+    reference_answer: "Starter does not include phone support; 24/7 phone support is Enterprise only. Starter support is by email with a first response within 48 business hours."
+  metadata:
+    id: fp-004
+    category: false_premise
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [support_and_sla#chunk_0]
+    key_facts: ["Email, live chat, and 24/7 phone", "Within 48 business hours"]
+    source: human
+
+- description: "Annual refund 'limited to 14 days'"
+  vars:
+    query: "Why is my annual plan refund limited to 14 days?"
+    reference_answer: "It isn't: annual subscriptions can be refunded on a prorated basis within 30 days of the purchase or renewal date. The 14-day window applies to monthly subscriptions."
+  metadata:
+    id: fp-005
+    category: false_premise
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [billing_and_refunds#chunk_4]
+    key_facts: ["within 30 days of the purchase or renewal date"]
+    source: human

@@ -1,0 +1,369 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "Retrieval › Context relevance — how much of the retrieved context is relevant to the query (LLM-judged)"
+
+prompts:
+  - id: query-only
+    label: "Raw query"
+    raw: "{{query}}"
+
+providers:
+  - id: file://../../providers/retriever_only.py
+    label: retriever-baseline
+    config:
+      pipeline: baseline
+      top_k: 5
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: context-relevance
+      contextTransform: context.metadata.retrieved_context
+      threshold: 0.2
+      metric: ContextRelevance
+
+tests:
+  - description: Unspecified price question
+    vars:
+      query: How much does it cost?
+      reference_answer: 'The question does not say which plan. The assistant should ask which plan is meant or summarize plan
+        prices: Free $0, Starter $8 ($6.40 annual), Pro $15 ($12 annual) per user per month, Enterprise custom.'
+    metadata:
+      id: amb-001
+      gold_ids:
+      - pricing_plans#chunk_1
+      key_facts:
+      - '| Starter | $8 | $6.40 |'
+      - '| Pro | $15 | $12 |'
+
+  - description: Owner vs Admin role
+    vars:
+      query: What is the difference between an Owner and an Admin?
+      reference_answer: Owners have full control, including billing, deleting the workspace, and transferring ownership. Admins
+        manage members, integrations, and workspace settings but cannot delete the workspace or change the plan.
+    metadata:
+      id: cmp-001
+      gold_ids:
+      - team_management#chunk_0
+      key_facts:
+      - deleting the workspace, and transferring ownership
+      - cannot delete the workspace or change the plan
+
+  - description: Pro annual vs monthly savings
+    vars:
+      query: How much does one user save per year on Pro by paying annually instead of monthly?
+      reference_answer: Pro costs $15 per month on monthly billing ($180 per year) and $12 per month on annual billing ($144
+        per year), so annual billing saves $36 per user per year, a 20% discount.
+    metadata:
+      id: cmp-003
+      gold_ids:
+      - pricing_plans#chunk_1
+      key_facts:
+      - '| Pro | $15 | $12 |'
+      - 20% discount
+
+  - description: Audit logs Pro vs Enterprise
+    vars:
+      query: Compare audit log retention between Pro and Enterprise.
+      reference_answer: Pro keeps audit logs for 90 days. Enterprise keeps them for 1 year and can stream them to a SIEM. Free
+        and Starter do not have audit logs.
+    metadata:
+      id: cmp-005
+      gold_ids:
+      - account_security#chunk_4
+      key_facts:
+      - 'Pro: audit logs are kept for 90 days'
+      - 'Enterprise: audit logs are kept for 1 year'
+
+  - description: SMS two-factor codes
+    vars:
+      query: Can I receive two-factor authentication codes by SMS?
+      reference_answer: No. SMS-based 2FA was removed in version 5.1 (May 20, 2026). Use an authenticator app (TOTP) or a hardware
+        security key (WebAuthn/FIDO2).
+    metadata:
+      id: cf-002
+      gold_ids:
+      - account_security#chunk_1
+      - release_notes#chunk_1
+      key_facts:
+      - SMS codes are not supported
+      - SMS-based two-factor authentication has been removed
+
+  - description: Free plan member limit (archived says 3)
+    vars:
+      query: How many members can a workspace have on the Free plan?
+      reference_answer: The Free plan allows up to 5 members (since release 5.0; the archived 2024 pricing allowed 3).
+    metadata:
+      id: cf-004
+      gold_ids:
+      - pricing_plans#chunk_1
+      key_facts:
+      - '| Free | $0 | $0 | 5 |'
+
+  - description: 'Follow-up: rate limit of previously discussed plan'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "What does the Pro plan cost?"},
+          {"role": "assistant", "content": "Pro costs $15 per user per month on monthly billing, or $12 per user per month billed annually [pricing_plans#chunk_1]."}
+        ]
+      query: And what's its API rate limit?
+      reference_answer: The Pro plan API rate limit is 1,000 requests per minute per workspace.
+    metadata:
+      id: conv-001
+      gold_ids:
+      - integrations_and_api#chunk_2
+      key_facts:
+      - 'Pro: 1,000 requests per minute'
+
+  - description: 'Follow-up: minimum contract for the SSO plan'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "Which plans include SSO?"},
+          {"role": "assistant", "content": "SAML single sign-on is available on the Enterprise plan only [account_security#chunk_2]."}
+        ]
+      query: What's the minimum contract size for that plan?
+      reference_answer: The minimum Enterprise contract is 50 users billed annually.
+    metadata:
+      id: conv-003
+      gold_ids:
+      - pricing_plans#chunk_4
+      key_facts:
+      - minimum Enterprise contract is 50 users billed annually
+
+  - description: Pro plan 'discontinued'
+    vars:
+      query: Why did Brindlework discontinue the Pro plan?
+      reference_answer: 'The premise is wrong: Pro was not discontinued. In release 5.0 the Business plan was renamed Pro, and
+        Pro is a current plan at $15 per user per month ($12 billed annually).'
+    metadata:
+      id: fp-001
+      gold_ids:
+      - release_notes#chunk_2
+      - pricing_plans#chunk_1
+      key_facts:
+      - the Business plan was renamed Pro
+      - '| Pro | $15 |'
+
+  - description: Audit logs on Free
+    vars:
+      query: Since the Free plan includes audit logs, where can I find them?
+      reference_answer: 'The premise is wrong: audit logs are not available on the Free or Starter plans. They are kept for
+        90 days on Pro and 1 year on Enterprise.'
+    metadata:
+      id: fp-003
+      gold_ids:
+      - account_security#chunk_4
+      key_facts:
+      - Audit logs are not available on the Free and Starter plans
+
+  - description: Annual refund 'limited to 14 days'
+    vars:
+      query: Why is my annual plan refund limited to 14 days?
+      reference_answer: 'It isn''t: annual subscriptions can be refunded on a prorated basis within 30 days of the purchase
+        or renewal date. The 14-day window applies to monthly subscriptions.'
+    metadata:
+      id: fp-005
+      gold_ids:
+      - billing_and_refunds#chunk_4
+      key_facts:
+      - within 30 days of the purchase or renewal date
+
+  - description: EU data residency on Pro and when it became available
+    vars:
+      query: Can a Pro workspace be hosted in the EU, and since when has that been possible?
+      reference_answer: Yes. Pro workspaces can use the EU region in Frankfurt, Germany. It became available on Pro in version
+        5.1 on May 20, 2026; before that it was Enterprise only. The region is chosen when the workspace is created.
+    metadata:
+      id: mh-002
+      gold_ids:
+      - data_retention_and_privacy#chunk_3
+      - release_notes#chunk_1
+      key_facts:
+      - Frankfurt
+      - May 20, 2026
+
+  - description: Support response time on cheapest plan with Timeline view
+    vars:
+      query: How quickly will support respond on the cheapest plan that includes the Timeline view?
+      reference_answer: Timeline view is available on Pro and Enterprise only, so the cheapest such plan is Pro. Pro support
+        (email and live chat) targets a first response within 8 business hours.
+    metadata:
+      id: mh-004
+      gold_ids:
+      - product_overview#chunk_1
+      - support_and_sla#chunk_0
+      key_facts:
+      - Available on Pro and Enterprise plans only
+      - Within 8 business hours
+
+  - description: Enterprise SSO options and audit log retention
+    vars:
+      query: What single sign-on options do we get on Enterprise, and how long are audit logs kept on that plan?
+      reference_answer: Enterprise includes SAML 2.0 SSO with identity providers such as Okta, Microsoft Entra ID (Azure AD),
+        Google Workspace, and OneLogin, plus SCIM 2.0 provisioning. Enterprise audit logs are kept for 1 year and can be streamed
+        to a SIEM.
+    metadata:
+      id: mh-006
+      gold_ids:
+      - account_security#chunk_2
+      - account_security#chunk_4
+      key_facts:
+      - SAML 2.0
+      - 'Enterprise: audit logs are kept for 1 year'
+
+  - description: Cheapest annual price with Brindlework AI
+    vars:
+      query: What is the cheapest annual per-user price for a plan that includes Brindlework AI?
+      reference_answer: Brindlework AI is included in Pro and Enterprise. The cheapest is Pro at $12 per user per month on annual
+        billing.
+    metadata:
+      id: mh-008
+      gold_ids:
+      - product_overview#chunk_4
+      - pricing_plans#chunk_1
+      key_facts:
+      - Brindlework AI is included in Pro and Enterprise plans
+      - '| Pro | $15 | $12 |'
+
+  - description: Pro annual cost for 20 users
+    vars:
+      query: What is the total yearly cost for 20 users on Pro with annual billing?
+      reference_answer: Pro annual billing is $12 per user per month, so 20 users cost 20 x $12 x 12 = $2,880 per year, billed
+        upfront and excluding taxes.
+    metadata:
+      id: num-002
+      gold_ids:
+      - pricing_plans#chunk_1
+      key_facts:
+      - '| Pro | $15 | $12 |'
+
+  - description: Enterprise P1 response target
+    vars:
+      query: What is the response time target for a critical P1 issue on Enterprise?
+      reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+    metadata:
+      id: num-004
+      gold_ids:
+      - support_and_sla#chunk_0
+      key_facts:
+      - 1 hour for P1 (critical) issues
+
+  - description: Nonprofit Pro monthly price
+    vars:
+      query: We're a registered nonprofit. What would Pro cost us per user on monthly billing?
+      reference_answer: Registered nonprofits get a 50% discount on Starter and Pro. Pro is $15 per user per month on monthly
+        billing, so the nonprofit price is $7.50 per user per month.
+    metadata:
+      id: num-006
+      gold_ids:
+      - pricing_plans#chunk_1
+      - pricing_plans#chunk_3
+      key_facts:
+      - '| Pro | $15 |'
+      - 50% discount on Starter and Pro plans
+
+  - description: Monthly refund window
+    vars:
+      query: How long do I have to request a refund on a monthly subscription?
+      reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge.
+    metadata:
+      id: sh-002
+      gold_ids:
+      - billing_and_refunds#chunk_4
+      key_facts:
+      - within 14 days of the most recent charge
+
+  - description: Error code E301
+    vars:
+      query: I'm getting error E301. What does it mean?
+      reference_answer: E301 means permission denied. Ask a project Admin to give you access.
+    metadata:
+      id: sh-004
+      gold_ids:
+      - troubleshooting#chunk_0
+      key_facts:
+      - E301 | Permission denied
+
+  - description: Accepted payment methods
+    vars:
+      query: Which payment methods does Brindlework accept?
+      reference_answer: Brindlework accepts Visa, Mastercard, American Express, and PayPal. Bank transfer against an invoice is
+        available for Enterprise customers and annual Pro subscriptions with 20 or more seats.
+    metadata:
+      id: sh-006
+      gold_ids:
+      - billing_and_refunds#chunk_1
+      key_facts:
+      - Visa, Mastercard, American Express, and PayPal
+      - 20 or more seats
+
+  - description: Maximum number of Owners
+    vars:
+      query: How many Owners can a workspace have?
+      reference_answer: A workspace can have up to 3 Owners.
+    metadata:
+      id: sh-008
+      gold_ids:
+      - team_management#chunk_0
+      key_facts:
+      - up to 3 Owners
+
+  - description: API rate limit response
+    vars:
+      query: What happens when my API integration exceeds the rate limit?
+      reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+        retrying.
+    metadata:
+      id: sh-010
+      gold_ids:
+      - integrations_and_api#chunk_2
+      key_facts:
+      - '429'
+      - Retry-After
+
+  - description: Account lockout
+    vars:
+      query: What happens if I enter the wrong password too many times?
+      reference_answer: After 10 failed sign-in attempts, the account is locked for 15 minutes.
+    metadata:
+      id: sh-012
+      gold_ids:
+      - troubleshooting#chunk_4
+      key_facts:
+      - 10 failed sign-in attempts
+      - locked for 15 minutes
+
+  - description: Pro trial length before 2026
+    vars:
+      query: How long was the Pro trial before the January 2026 pricing change?
+      reference_answer: Before release 5.0 (January 15, 2026) the trial was 30 days (on the Business plan, since renamed Pro)
+        and required a credit card. It is now 14 days with no credit card required.
+    metadata:
+      id: tmp-002
+      gold_ids:
+      - release_notes#chunk_2
+      key_facts:
+      - shortened from 30 days to 14 days
+
+  - description: Old desktop version cannot sync
+    vars:
+      query: My desktop app is version 4.3 and it won't sync. Why?
+      reference_answer: Desktop versions older than 4.5 are no longer supported and cannot sync, because version 4.5 (April
+        9, 2025) introduced a new sync engine. Update to the latest version.
+    metadata:
+      id: tmp-004
+      gold_ids:
+      - troubleshooting#chunk_2
+      - release_notes#chunk_4
+      key_facts:
+      - older than 4.5 are no longer supported
+      - April 9, 2025
+
+  - file://../../datasets/suites/01_retrieval/context_relevance.yaml

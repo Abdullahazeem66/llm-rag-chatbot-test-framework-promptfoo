@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "Generation (isolated) › Clarification — ambiguous questions get a clarifying question or cover every plausible reading"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../providers/generation_only.py
+    label: generation-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      value: |
+        The user's question is ambiguous. Expected behavior: {{reference_answer}}
+
+        Pass if the response asks a clarifying question, or explicitly covers the plausible interpretations.
+        Fail if it confidently answers a single interpretation as though the question were unambiguous.
+      metric: Clarification
+
+tests:
+  - description: Unspecified price question
+    vars:
+      query: How much does it cost?
+      context: |-
+        [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+        ## Plan comparison
+
+        | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+        |---|---|---|---|---|---|
+        | Free | $0 | $0 | 5 | 2 GB | 0 |
+        | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+        | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+        | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+        Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+      reference_answer: 'The question does not say which plan. The assistant should ask which plan is meant or summarize plan
+        prices: Free $0, Starter $8 ($6.40 annual), Pro $15 ($12 annual) per user per month, Enterprise custom.'
+    metadata:
+      id: amb-001
+
+  - description: Getting data back
+    vars:
+      query: How do I get my data back?
+      context: |-
+        [data_retention_and_privacy#chunk_0] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+        ## Trash
+
+        Deleted tasks, projects, and files are moved to the Trash. Items in the Trash are kept for 30 days and can be restored by the person who deleted them or by a workspace Admin. After 30 days they are permanently deleted. Enterprise workspaces can configure Trash retention of up to 180 days.
+
+        ---
+
+        [data_retention_and_privacy#chunk_1] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+        ## Exporting data
+
+        Workspace Owners and Admins can export all workspace data at any time in Settings > Workspace > Export. Exports are available in CSV and JSON formats and include tasks, comments, and project structure. File attachments are exported as a separate ZIP archive. Export links expire after 7 days.
+      reference_answer: This could mean restoring deleted items or exporting data. Deleted items can be restored from the Trash
+        within 30 days (by the person who deleted them or an Admin). Owners and Admins can export all workspace data as CSV
+        or JSON in Settings > Workspace > Export. The assistant should cover both or ask which is meant.
+    metadata:
+      id: amb-003
+
+  - file://../../datasets/suites/02_generation/clarification.yaml

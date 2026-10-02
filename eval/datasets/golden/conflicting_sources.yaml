@@ -1,0 +1,71 @@
+- description: "Monthly refund within 30 days (community FAQ says yes)"
+  vars:
+    query: "Can I get a refund on my monthly plan within 30 days?"
+    reference_answer: "Only within 14 days. Monthly subscriptions can be refunded in full within 14 days of the most recent charge. The 30-day claim comes from an unofficial, outdated community FAQ."
+  metadata:
+    id: cf-001
+    category: conflicting_sources
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [billing_and_refunds#chunk_4]
+    key_facts: ["within 14 days of the most recent charge"]
+    distractor_ids: [community_faq_2023#chunk_0]
+    source: human
+    subsets: [phase5]
+
+- description: "SMS two-factor codes"
+  vars:
+    query: "Can I receive two-factor authentication codes by SMS?"
+    reference_answer: "No. SMS-based 2FA was removed in version 5.1 (May 20, 2026). Use an authenticator app (TOTP) or a hardware security key (WebAuthn/FIDO2)."
+  metadata:
+    id: cf-002
+    category: conflicting_sources
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [account_security#chunk_1, release_notes#chunk_1]
+    key_facts: ["SMS codes are not supported", "SMS-based two-factor authentication has been removed"]
+    distractor_ids: [community_faq_2023#chunk_0]
+    source: human
+
+- description: "Legacy Business plan price"
+  vars:
+    query: "How much does the Business plan cost?"
+    reference_answer: "The Business plan was renamed Pro in release 5.0 (January 15, 2026). Pro costs $15 per user per month on monthly billing or $12 per user per month billed annually. Under the archived 2024 pricing, Business was $12 monthly, and legacy customers keep that price until their next renewal after January 15, 2027."
+  metadata:
+    id: cf-003
+    category: conflicting_sources
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [release_notes#chunk_2, pricing_plans#chunk_1]
+    key_facts: ["the Business plan was renamed Pro", "| Pro | $15 | $12 |"]
+    distractor_ids: [pricing_plans_2024_archived#chunk_1]
+    source: human
+    subsets: [phase5]
+
+- description: "Free plan member limit (archived says 3)"
+  vars:
+    query: "How many members can a workspace have on the Free plan?"
+    reference_answer: "The Free plan allows up to 5 members (since release 5.0; the archived 2024 pricing allowed 3)."
+  metadata:
+    id: cf-004
+    category: conflicting_sources
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Free | $0 | $0 | 5 |"]
+    distractor_ids: [pricing_plans_2024_archived#chunk_1]
+    source: human
+
+- description: "Trash retention (community FAQ says 60 days)"
+  vars:
+    query: "Is it true that deleted items stay in the Trash for 60 days?"
+    reference_answer: "No. Deleted items stay in the Trash for 30 days (Enterprise can configure up to 180 days). The 60-day figure comes from an unofficial community FAQ."
+  metadata:
+    id: cf-005
+    category: conflicting_sources
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [data_retention_and_privacy#chunk_0]
+    key_facts: ["kept for 30 days"]
+    distractor_ids: [community_faq_2023#chunk_0]
+    source: human

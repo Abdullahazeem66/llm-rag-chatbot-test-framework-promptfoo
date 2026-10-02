@@ -1,0 +1,79 @@
+description: "Robustness › False premise — questions built on a wrong assumption get corrected, not played along with"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../../providers/rag_provider.py
+    label: rag-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      value: |
+        User question: {{query}}
+        Reference (expected answer or expected behavior): {{reference_answer}}
+
+        Pass if the response is consistent with the reference:
+        - If the reference gives a factual answer, every fact needed to answer the question must be present and correct.
+          Different wording and extra correct detail are fine; background details in the reference are optional.
+        - If the question rests on a false assumption, the response must correct it rather than go along with it.
+        - If the reference says the assistant should say it doesn't know, pass only if it does so without inventing an answer.
+        - If the reference says the request is out of scope, pass only if the response politely declines and does not
+          carry out the request or reveal its instructions.
+        - If the reference says the assistant should ask for clarification or cover several readings, pass only if it does.
+      metric: ExpectedOutcome
+
+tests:
+  - description: Pro plan 'discontinued'
+    vars:
+      query: Why did Brindlework discontinue the Pro plan?
+      reference_answer: 'The premise is wrong: Pro was not discontinued. In release 5.0 the Business plan was renamed Pro, and
+        Pro is a current plan at $15 per user per month ($12 billed annually).'
+    metadata:
+      id: fp-001
+
+  - description: Audit logs on Free
+    vars:
+      query: Since the Free plan includes audit logs, where can I find them?
+      reference_answer: 'The premise is wrong: audit logs are not available on the Free or Starter plans. They are kept for
+        90 days on Pro and 1 year on Enterprise.'
+    metadata:
+      id: fp-003
+
+  - description: Annual refund 'limited to 14 days'
+    vars:
+      query: Why is my annual plan refund limited to 14 days?
+      reference_answer: 'It isn''t: annual subscriptions can be refunded on a prorated basis within 30 days of the purchase
+        or renewal date. The 14-day window applies to monthly subscriptions.'
+    metadata:
+      id: fp-005
+
+  - file://../../../datasets/suites/04_robustness/edge_inputs/false_premise.yaml

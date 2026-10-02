@@ -1,0 +1,157 @@
+- description: "Pro plan monthly price"
+  vars:
+    query: "How much does the Pro plan cost per user on monthly billing?"
+    reference_answer: "The Pro plan costs $15 per user per month on monthly billing (excluding taxes)."
+  metadata:
+    id: sh-001
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Pro | $15 |"]
+    source: human
+    subsets: [phase5]
+
+- description: "Monthly refund window"
+  vars:
+    query: "How long do I have to request a refund on a monthly subscription?"
+    reference_answer: "Monthly subscriptions can be refunded in full within 14 days of the most recent charge."
+  metadata:
+    id: sh-002
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [billing_and_refunds#chunk_4]
+    key_facts: ["within 14 days of the most recent charge"]
+    source: human
+
+- description: "Minimum password length"
+  vars:
+    query: "What is the minimum password length?"
+    reference_answer: "Passwords must be at least 12 characters long and cannot match any of your last 5 passwords."
+  metadata:
+    id: sh-003
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [account_security#chunk_0]
+    key_facts: ["at least 12 characters"]
+    source: human
+
+- description: "Error code E301"
+  vars:
+    query: "I'm getting error E301. What does it mean?"
+    reference_answer: "E301 means permission denied. Ask a project Admin to give you access."
+  metadata:
+    id: sh-004
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [troubleshooting#chunk_0]
+    key_facts: ["E301 | Permission denied"]
+    source: human
+
+- description: "Trash retention period"
+  vars:
+    query: "How long are deleted items kept in the Trash?"
+    reference_answer: "Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces can configure Trash retention of up to 180 days."
+  metadata:
+    id: sh-005
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [data_retention_and_privacy#chunk_0]
+    key_facts: ["kept for 30 days", "up to 180 days"]
+    source: human
+
+- description: "Accepted payment methods"
+  vars:
+    query: "Which payment methods does Brindlework accept?"
+    reference_answer: "Brindlework accepts Visa, Mastercard, American Express, and PayPal. Bank transfer against an invoice is available for Enterprise customers and annual Pro subscriptions with 20 or more seats."
+  metadata:
+    id: sh-006
+    category: single_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [billing_and_refunds#chunk_1]
+    key_facts: ["Visa, Mastercard, American Express, and PayPal", "20 or more seats"]
+    source: human
+
+- description: "Invitation expiry"
+  vars:
+    query: "How long does a workspace invitation stay valid?"
+    reference_answer: "Invitations expire after 7 days."
+  metadata:
+    id: sh-007
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [team_management#chunk_1]
+    key_facts: ["Invitations expire after 7 days"]
+    source: human
+
+- description: "Maximum number of Owners"
+  vars:
+    query: "How many Owners can a workspace have?"
+    reference_answer: "A workspace can have up to 3 Owners."
+  metadata:
+    id: sh-008
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [team_management#chunk_0]
+    key_facts: ["up to 3 Owners"]
+    source: human
+
+- description: "Company headquarters"
+  vars:
+    query: "Where is Brindlework headquartered?"
+    reference_answer: "Brindlework is headquartered in Lisbon, Portugal."
+  metadata:
+    id: sh-009
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [product_overview#chunk_0]
+    key_facts: ["Lisbon, Portugal"]
+    source: human
+
+- description: "API rate limit response"
+  vars:
+    query: "What happens when my API integration exceeds the rate limit?"
+    reference_answer: "The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before retrying."
+  metadata:
+    id: sh-010
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [integrations_and_api#chunk_2]
+    key_facts: ["429", "Retry-After"]
+    source: human
+    subsets: [phase5]
+
+- description: "Webhook signing"
+  vars:
+    query: "How can I verify that a webhook request really came from Brindlework?"
+    reference_answer: "Each webhook request is signed with an HMAC-SHA256 signature sent in the X-Brindlework-Signature header."
+  metadata:
+    id: sh-011
+    category: single_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [integrations_and_api#chunk_3]
+    key_facts: ["HMAC-SHA256", "X-Brindlework-Signature"]
+    source: human
+
+- description: "Account lockout"
+  vars:
+    query: "What happens if I enter the wrong password too many times?"
+    reference_answer: "After 10 failed sign-in attempts, the account is locked for 15 minutes."
+  metadata:
+    id: sh-012
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [troubleshooting#chunk_4]
+    key_facts: ["10 failed sign-in attempts", "locked for 15 minutes"]
+    source: human

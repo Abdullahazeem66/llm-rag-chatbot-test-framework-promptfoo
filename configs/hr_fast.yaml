@@ -1,0 +1,4 @@
+extends: hr_rerank_low
+name: hr_fast
+llm:
+  reasoning_effort: low

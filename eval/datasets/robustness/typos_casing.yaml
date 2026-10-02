@@ -1,0 +1,110 @@
+- description: '[typos_casing] Pro plan monthly price'
+  vars:
+    query: HOW MUCH DOES THE PRO PLAN COST PER USER ON MOTNHLY BILLING
+    reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+  metadata:
+    id: sh-001~typos_casing
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - pricing_plans#chunk_1
+    key_facts:
+    - '| Pro | $15 |'
+    source: human
+    perturbation: typos_casing
+    parent_id: sh-001
+
+- description: '[typos_casing] Trash retention period'
+  vars:
+    query: how long are dleeted itmes kept in the trash
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005~typos_casing
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - data_retention_and_privacy#chunk_0
+    key_facts:
+    - kept for 30 days
+    - up to 180 days
+    source: human
+    perturbation: typos_casing
+    parent_id: sh-005
+
+- description: '[typos_casing] API rate limit response'
+  vars:
+    query: what happnes when my api integration execeds the rate limit?
+    reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+      retrying.
+  metadata:
+    id: sh-010~typos_casing
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - integrations_and_api#chunk_2
+    key_facts:
+    - '429'
+    - Retry-After
+    source: human
+    perturbation: typos_casing
+    parent_id: sh-010
+
+- description: '[typos_casing] Starter plan: Zapier access and API rate limit'
+  vars:
+    query: I'M ON THE STRATER PLAN CAN I USE THE ZAPER INTEGRATION AND WHAT IS MY API RATE LIMIT
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001~typos_casing
+    category: multi_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids:
+    - integrations_and_api#chunk_0
+    - integrations_and_api#chunk_2
+    key_facts:
+    - '| Zapier | Pro and above |'
+    - 'Starter: 300 requests per minute'
+    source: human
+    perturbation: typos_casing
+    parent_id: mh-001
+
+- description: '[typos_casing] Starter vs Pro support response'
+  vars:
+    query: HOW DO SUPPORT CHANNELS AND RESPONSE TIMES DIFEFR BETWEEN STARTER AND PRO
+    reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+      with a first response within 8 business hours.
+  metadata:
+    id: cmp-002~typos_casing
+    category: comparison
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - support_and_sla#chunk_0
+    key_facts:
+    - Within 48 business hours
+    - Within 8 business hours
+    source: human
+    perturbation: typos_casing
+    parent_id: cmp-002
+
+- description: '[typos_casing] Enterprise P1 response target'
+  vars:
+    query: what is the repsonse time target for a crtical p1 issue on enterprise
+    reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+  metadata:
+    id: num-004~typos_casing
+    category: numerical
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - support_and_sla#chunk_0
+    key_facts:
+    - 1 hour for P1 (critical) issues
+    source: human
+    perturbation: typos_casing
+    parent_id: num-004

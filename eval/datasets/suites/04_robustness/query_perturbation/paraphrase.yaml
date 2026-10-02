@@ -1,0 +1,22 @@
+- description: '[paraphrase] Trash retention period'
+  vars:
+    query: For how long do items remain in the Trash after being deleted?
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005~paraphrase
+
+- description: '[paraphrase] Starter plan: Zapier access and API rate limit'
+  vars:
+    query: Does the Starter plan include access to the Zapier integration, and what API rate limit applies to my account?
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001~paraphrase
+
+- description: '[paraphrase] Enterprise P1 response target'
+  vars:
+    query: For Enterprise, what response time is targeted for a critical P1 issue?
+    reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+  metadata:
+    id: num-004~paraphrase

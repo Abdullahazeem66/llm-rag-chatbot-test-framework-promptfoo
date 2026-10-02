@@ -1,0 +1,11 @@
+{
+  "name": "rag-eval-promptfoo",
+  "private": true,
+  "scripts": {
+    "eval": "promptfoo eval",
+    "view": "promptfoo view"
+  },
+  "devDependencies": {
+    "promptfoo": "^0.123.1"
+  }
+}

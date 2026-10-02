@@ -1,0 +1,64 @@
+- description: "Brindlework AI release date"
+  vars:
+    query: "When was Brindlework AI released?"
+    reference_answer: "Brindlework AI was released in version 5.2 on August 12, 2026."
+  metadata:
+    id: tmp-001
+    category: temporal
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [release_notes#chunk_0]
+    key_facts: ["Version 5.2 - August 12, 2026"]
+    source: human
+
+- description: "Pro trial length before 2026"
+  vars:
+    query: "How long was the Pro trial before the January 2026 pricing change?"
+    reference_answer: "Before release 5.0 (January 15, 2026) the trial was 30 days (on the Business plan, since renamed Pro) and required a credit card. It is now 14 days with no credit card required."
+  metadata:
+    id: tmp-002
+    category: temporal
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [release_notes#chunk_2]
+    key_facts: ["shortened from 30 days to 14 days"]
+    source: human
+
+- description: "Recurring tasks introduction"
+  vars:
+    query: "In which version and when were recurring tasks introduced?"
+    reference_answer: "Recurring tasks were introduced in version 4.8, released on October 2, 2025."
+  metadata:
+    id: tmp-003
+    category: temporal
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [release_notes#chunk_3]
+    key_facts: ["Version 4.8 - October 2, 2025", "Recurring tasks"]
+    source: human
+
+- description: "Old desktop version cannot sync"
+  vars:
+    query: "My desktop app is version 4.3 and it won't sync. Why?"
+    reference_answer: "Desktop versions older than 4.5 are no longer supported and cannot sync, because version 4.5 (April 9, 2025) introduced a new sync engine. Update to the latest version."
+  metadata:
+    id: tmp-004
+    category: temporal
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [troubleshooting#chunk_2, release_notes#chunk_4]
+    key_facts: ["older than 4.5 are no longer supported", "April 9, 2025"]
+    source: human
+
+- description: "Annual discount change in 5.0"
+  vars:
+    query: "How did the annual billing discount change in release 5.0?"
+    reference_answer: "Release 5.0 (January 15, 2026) increased the annual billing discount from 15% to 20%."
+  metadata:
+    id: tmp-005
+    category: temporal
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [release_notes#chunk_2]
+    key_facts: ["increased from 15% to 20%"]
+    source: human

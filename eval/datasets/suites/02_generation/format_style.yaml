@@ -1,0 +1,169 @@
+- description: Starter vs Pro support response
+  vars:
+    query: How do support channels and response times differ between Starter and Pro?
+    context: |-
+      [support_and_sla#chunk_0] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+      # Support Channels and Response Times
+
+      Business hours are Monday to Friday, 08:00 to 18:00 UTC, excluding Portuguese public holidays.
+
+      | Plan | Support channels | First response target |
+      |---|---|---|
+      | Free | Help center and community forum | No guaranteed response |
+      | Starter | Email | Within 48 business hours |
+      | Pro | Email and live chat | Within 8 business hours |
+      | Enterprise | Email, live chat, and 24/7 phone | 1 hour for P1 (critical) issues, 4 hours for P2 |
+    reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+      with a first response within 8 business hours.
+  metadata:
+    id: cmp-002
+
+- description: Monthly vs annual refund rules
+  vars:
+    query: How are refunds different for monthly and annual subscriptions?
+    context: |-
+      [billing_and_refunds#chunk_4] source: billing_and_refunds.md | title: Billing and Refunds | type: official | updated: 2026-03-10
+      ## Refund policy
+
+      - **Monthly subscriptions** can be refunded in full within 14 days of the most recent charge.
+      - **Annual subscriptions** can be refunded on a prorated basis within 30 days of the purchase or renewal date. After 30 days, annual subscriptions are not refundable, but you can turn off auto-renewal at any time.
+      - Charges for extra storage add-ons are not refundable.
+      - Refunds are returned to the original payment method and usually appear within 5 to 10 business days.
+
+      To request a refund, contact billing@brindlework.example from the email address of a workspace Owner or billing admin, and include your workspace URL.
+    reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge. Annual subscriptions
+      can be refunded on a prorated basis within 30 days of the purchase or renewal date; after that they are not refundable,
+      but auto-renewal can be turned off.
+  metadata:
+    id: cmp-004
+
+- description: Starter monthly cost for 10 users
+  vars:
+    query: How much would 10 users on the Starter plan cost per month with monthly billing?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: Starter is $8 per user per month on monthly billing, so 10 users cost $80 per month, excluding taxes.
+  metadata:
+    id: num-001
+
+- description: Starter member limit
+  vars:
+    query: What is the maximum number of members on the Starter plan?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The Starter plan allows up to 25 members.
+  metadata:
+    id: num-003
+
+- description: Service credit for 98.5% uptime
+  vars:
+    query: Our Enterprise uptime last month was 98.5%. What service credit do we get?
+    context: |-
+      [support_and_sla#chunk_2] source: support_and_sla.md | title: Support Channels and Response Times | type: official | updated: 2026-01-15
+      ## Uptime commitment
+
+      Brindlework targets 99.9% monthly uptime for all paid plans. Enterprise contracts include a 99.95% uptime SLA with service credits: 10% of the monthly fee if uptime falls below 99.95%, and 25% if it falls below 99.0%. Service status is published at status.brindlework.example.
+    reference_answer: Uptime below 99.0% qualifies for a service credit of 25% of the monthly fee under the Enterprise 99.95%
+      uptime SLA.
+  metadata:
+    id: num-005
+
+- description: Pro plan monthly price
+  vars:
+    query: How much does the Pro plan cost per user on monthly billing?
+    context: |-
+      [pricing_plans#chunk_1] source: pricing_plans.md | title: Pricing and Plans (2026) | type: official | updated: 2026-01-15
+      ## Plan comparison
+
+      | Plan | Monthly price (per user) | Annual price (per user, per month) | Max members | Storage (per workspace) | Guests |
+      |---|---|---|---|---|---|
+      | Free | $0 | $0 | 5 | 2 GB | 0 |
+      | Starter | $8 | $6.40 | 25 | 100 GB | 5 |
+      | Pro | $15 | $12 | Unlimited | 1 TB | 50 |
+      | Enterprise | Custom | Custom | Unlimited | Unlimited | Unlimited |
+
+      Annual billing gives a 20% discount compared to monthly billing. Annual plans are billed upfront for the full year.
+    reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+  metadata:
+    id: sh-001
+
+- description: Minimum password length
+  vars:
+    query: What is the minimum password length?
+    context: |-
+      [account_security#chunk_0] source: account_security.md | title: Account Security | type: official | updated: 2026-04-22
+      ## Passwords
+
+      Passwords must be at least 12 characters long and cannot match any of your last 5 passwords. Brindlework checks new passwords against known breached password lists. You can reset your password from the sign-in page using "Forgot password"; the reset link expires after 1 hour.
+    reference_answer: Passwords must be at least 12 characters long and cannot match any of your last 5 passwords.
+  metadata:
+    id: sh-003
+
+- description: Trash retention period
+  vars:
+    query: How long are deleted items kept in the Trash?
+    context: |-
+      [data_retention_and_privacy#chunk_0] source: data_retention_and_privacy.md | title: Data Retention and Privacy | type: official | updated: 2026-05-20
+      ## Trash
+
+      Deleted tasks, projects, and files are moved to the Trash. Items in the Trash are kept for 30 days and can be restored by the person who deleted them or by a workspace Admin. After 30 days they are permanently deleted. Enterprise workspaces can configure Trash retention of up to 180 days.
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005
+
+- description: Invitation expiry
+  vars:
+    query: How long does a workspace invitation stay valid?
+    context: |-
+      [team_management#chunk_1] source: team_management.md | title: Team and Workspace Management | type: official | updated: 2026-03-02
+      ## Inviting people
+
+      Owners and Admins can invite people by email in Settings > Members > Invite. Invitations expire after 7 days. On the Starter plan and above, admins can also allow anyone with an email address from an approved domain to join the workspace automatically.
+    reference_answer: Invitations expire after 7 days.
+  metadata:
+    id: sh-007
+
+- description: Company headquarters
+  vars:
+    query: Where is Brindlework headquartered?
+    context: |-
+      [product_overview#chunk_0] source: product_overview.md | title: Brindlework Product Overview | type: official | updated: 2026-02-01
+      # Brindlework Product Overview
+
+      Brindlework is a project management and team collaboration platform for teams of every size. It was founded in 2019 and is headquartered in Lisbon, Portugal. Brindlework is available on the web, as desktop apps for Windows and macOS, and as mobile apps for iOS and Android.
+    reference_answer: Brindlework is headquartered in Lisbon, Portugal.
+  metadata:
+    id: sh-009
+
+- description: Webhook signing
+  vars:
+    query: How can I verify that a webhook request really came from Brindlework?
+    context: |-
+      [integrations_and_api#chunk_3] source: integrations_and_api.md | title: Integrations and API | type: official | updated: 2026-06-05
+      ## Webhooks
+
+      Webhooks send an HTTP POST request to your endpoint for events such as task.created, task.updated, and task.completed. Each request is signed with an HMAC-SHA256 signature in the `X-Brindlework-Signature` header. If your endpoint does not return a 2xx status, Brindlework retries up to 5 times with exponential backoff over about 1 hour.
+    reference_answer: Each webhook request is signed with an HMAC-SHA256 signature sent in the X-Brindlework-Signature header.
+  metadata:
+    id: sh-011

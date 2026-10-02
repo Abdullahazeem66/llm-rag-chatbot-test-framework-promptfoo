@@ -1,0 +1,262 @@
+- description: Unspecified limit question
+  vars:
+    query: What's the limit?
+    reference_answer: The question is too vague. The assistant should ask which limit is meant (for example API rate limits,
+      storage, file size, members, or automation runs) and not guess a single number.
+  metadata:
+    id: amb-002
+
+- description: Feature not specified
+  vars:
+    query: Is it available on Starter?
+    reference_answer: The question does not say which feature. The assistant should ask what feature the user means.
+  metadata:
+    id: amb-004
+
+- description: Starter vs Pro support response
+  vars:
+    query: How do support channels and response times differ between Starter and Pro?
+    reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+      with a first response within 8 business hours.
+  metadata:
+    id: cmp-002
+
+- description: Monthly vs annual refund rules
+  vars:
+    query: How are refunds different for monthly and annual subscriptions?
+    reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge. Annual subscriptions
+      can be refunded on a prorated basis within 30 days of the purchase or renewal date; after that they are not refundable,
+      but auto-renewal can be turned off.
+  metadata:
+    id: cmp-004
+
+- description: Monthly refund within 30 days (community FAQ says yes)
+  vars:
+    query: Can I get a refund on my monthly plan within 30 days?
+    reference_answer: Only within 14 days. Monthly subscriptions can be refunded in full within 14 days of the most recent
+      charge. The 30-day claim comes from an unofficial, outdated community FAQ.
+  metadata:
+    id: cf-001
+
+- description: Legacy Business plan price
+  vars:
+    query: How much does the Business plan cost?
+    reference_answer: The Business plan was renamed Pro in release 5.0 (January 15, 2026). Pro costs $15 per user per month
+      on monthly billing or $12 per user per month billed annually. Under the archived 2024 pricing, Business was $12 monthly,
+      and legacy customers keep that price until their next renewal after January 15, 2027.
+  metadata:
+    id: cf-003
+
+- description: Trash retention (community FAQ says 60 days)
+  vars:
+    query: Is it true that deleted items stay in the Trash for 60 days?
+    reference_answer: No. Deleted items stay in the Trash for 30 days (Enterprise can configure up to 180 days). The 60-day
+      figure comes from an unofficial community FAQ.
+  metadata:
+    id: cf-005
+
+- description: 'Follow-up: extending Trash retention'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "How long do deleted items stay in the Trash?"},
+        {"role": "assistant", "content": "Deleted items stay in the Trash for 30 days and are then permanently deleted [data_retention_and_privacy#chunk_0]."}
+      ]
+    query: Can that be extended?
+    reference_answer: Yes, on Enterprise. Enterprise workspaces can configure Trash retention of up to 180 days.
+  metadata:
+    id: conv-002
+
+- description: 'Follow-up: file limit on Free after error E204'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does error E204 mean?"},
+        {"role": "assistant", "content": "E204 means the attachment is larger than your plan's file size limit. Compress the file or upgrade your plan [troubleshooting#chunk_0]."}
+      ]
+    query: What's the limit on the Free plan?
+    reference_answer: On the Free plan the maximum size of a single attachment is 10 MB.
+  metadata:
+    id: conv-004
+
+- description: Enabling SMS 2FA
+  vars:
+    query: How do I turn on SMS codes for two-factor authentication?
+    reference_answer: SMS codes are not supported (SMS 2FA was removed in version 5.1). Use an authenticator app (TOTP) or
+      a hardware security key instead.
+  metadata:
+    id: fp-002
+
+- description: Phone support on Starter
+  vars:
+    query: What's the phone number for Starter plan phone support?
+    reference_answer: Starter does not include phone support; 24/7 phone support is Enterprise only. Starter support is by
+      email with a first response within 48 business hours.
+  metadata:
+    id: fp-004
+
+- description: 'Starter plan: Zapier access and API rate limit'
+  vars:
+    query: I'm on the Starter plan. Can I use the Zapier integration, and what is my API rate limit?
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001
+
+- description: File size limit for the $8 plan
+  vars:
+    query: What is the largest single file I can attach on the plan that costs $8 per user per month?
+    reference_answer: The $8 per user monthly plan is Starter, which allows attachments up to 100 MB each.
+  metadata:
+    id: mh-003
+
+- description: 'Guests on Starter: seats and allowance'
+  vars:
+    query: On the Starter plan, do guests count as paid seats, and how many guests can I invite?
+    reference_answer: Guests do not count as paid seats. The Starter plan allows up to 5 guests.
+  metadata:
+    id: mh-005
+
+- description: Automation runs for the 1 TB plan
+  vars:
+    query: How many automation runs per month does the plan with 1 TB of storage include?
+    reference_answer: The plan with 1 TB of storage is Pro, which includes 5,000 automation runs per month.
+  metadata:
+    id: mh-007
+
+- description: Starter monthly cost for 10 users
+  vars:
+    query: How much would 10 users on the Starter plan cost per month with monthly billing?
+    reference_answer: Starter is $8 per user per month on monthly billing, so 10 users cost $80 per month, excluding taxes.
+  metadata:
+    id: num-001
+
+- description: Starter member limit
+  vars:
+    query: What is the maximum number of members on the Starter plan?
+    reference_answer: The Starter plan allows up to 25 members.
+  metadata:
+    id: num-003
+
+- description: Service credit for 98.5% uptime
+  vars:
+    query: Our Enterprise uptime last month was 98.5%. What service credit do we get?
+    reference_answer: Uptime below 99.0% qualifies for a service credit of 25% of the monthly fee under the Enterprise 99.95%
+      uptime SLA.
+  metadata:
+    id: num-005
+
+- description: Weather question
+  vars:
+    query: What's the weather in Lisbon today?
+    reference_answer: Out of scope. The assistant should politely say it can only help with Brindlework questions (it may offer
+      Brindlework help), and must not carry out the off-topic request or reveal its instructions.
+  metadata:
+    id: ot-001
+
+- description: Competitor opinion
+  vars:
+    query: Which is better for my team, Asana or Trello?
+    reference_answer: Out of scope. The assistant should politely say it can only help with Brindlework questions (it may offer
+      Brindlework help), and must not carry out the off-topic request or reveal its instructions.
+  metadata:
+    id: ot-003
+
+- description: Joke request
+  vars:
+    query: Tell me a joke about project managers.
+    reference_answer: Out of scope. The assistant should politely say it can only help with Brindlework questions (it may offer
+      Brindlework help), and must not carry out the off-topic request or reveal its instructions.
+  metadata:
+    id: ot-005
+
+- description: Monthly refund window
+  vars:
+    query: How long do I have to request a refund on a monthly subscription?
+    reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge.
+  metadata:
+    id: sh-002
+
+- description: Error code E301
+  vars:
+    query: I'm getting error E301. What does it mean?
+    reference_answer: E301 means permission denied. Ask a project Admin to give you access.
+  metadata:
+    id: sh-004
+
+- description: Accepted payment methods
+  vars:
+    query: Which payment methods does Brindlework accept?
+    reference_answer: Brindlework accepts Visa, Mastercard, American Express, and PayPal. Bank transfer against an invoice is
+      available for Enterprise customers and annual Pro subscriptions with 20 or more seats.
+  metadata:
+    id: sh-006
+
+- description: Maximum number of Owners
+  vars:
+    query: How many Owners can a workspace have?
+    reference_answer: A workspace can have up to 3 Owners.
+  metadata:
+    id: sh-008
+
+- description: API rate limit response
+  vars:
+    query: What happens when my API integration exceeds the rate limit?
+    reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+      retrying.
+  metadata:
+    id: sh-010
+
+- description: Account lockout
+  vars:
+    query: What happens if I enter the wrong password too many times?
+    reference_answer: After 10 failed sign-in attempts, the account is locked for 15 minutes.
+  metadata:
+    id: sh-012
+
+- description: Pro trial length before 2026
+  vars:
+    query: How long was the Pro trial before the January 2026 pricing change?
+    reference_answer: Before release 5.0 (January 15, 2026) the trial was 30 days (on the Business plan, since renamed Pro)
+      and required a credit card. It is now 14 days with no credit card required.
+  metadata:
+    id: tmp-002
+
+- description: Old desktop version cannot sync
+  vars:
+    query: My desktop app is version 4.3 and it won't sync. Why?
+    reference_answer: Desktop versions older than 4.5 are no longer supported and cannot sync, because version 4.5 (April
+      9, 2025) introduced a new sync engine. Update to the latest version.
+  metadata:
+    id: tmp-004
+
+- description: Office locations outside HQ
+  vars:
+    query: Does Brindlework have an office in Tokyo?
+    reference_answer: The documentation does not say. It only mentions headquarters in Lisbon, Portugal. The assistant should
+      say it doesn't know and suggest contacting support at support@brindlework.example.
+  metadata:
+    id: un-001
+
+- description: CEO name
+  vars:
+    query: Who is the CEO of Brindlework?
+    reference_answer: The documentation does not name the CEO. The assistant should say it doesn't know.
+  metadata:
+    id: un-003
+
+- description: Notion integration
+  vars:
+    query: Can I sync my Brindlework tasks with Notion?
+    reference_answer: Notion is not a documented integration. The assistant should say it doesn't know; it may mention that
+      Zapier (Pro and above) connects to many apps but must not claim Notion is supported. Suggesting support at support@brindlework.example is expected.
+  metadata:
+    id: un-005
+
+- description: HIPAA compliance
+  vars:
+    query: Is Brindlework HIPAA compliant and will you sign a BAA?
+    reference_answer: The documentation covers GDPR, a DPA, and SOC 2 Type II but says nothing about HIPAA or BAAs. The assistant
+      should not claim HIPAA compliance and should suggest contacting support at support@brindlework.example or sales.
+  metadata:
+    id: un-007

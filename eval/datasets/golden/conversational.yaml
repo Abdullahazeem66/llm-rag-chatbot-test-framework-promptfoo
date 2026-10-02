@@ -1,0 +1,75 @@
+- description: "Follow-up: rate limit of previously discussed plan"
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does the Pro plan cost?"},
+        {"role": "assistant", "content": "Pro costs $15 per user per month on monthly billing, or $12 per user per month billed annually [pricing_plans#chunk_1]."}
+      ]
+    query: "And what's its API rate limit?"
+    reference_answer: "The Pro plan API rate limit is 1,000 requests per minute per workspace."
+  metadata:
+    id: conv-001
+    category: conversational
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [integrations_and_api#chunk_2]
+    key_facts: ["Pro: 1,000 requests per minute"]
+    source: human
+    subsets: [phase5]
+
+- description: "Follow-up: extending Trash retention"
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "How long do deleted items stay in the Trash?"},
+        {"role": "assistant", "content": "Deleted items stay in the Trash for 30 days and are then permanently deleted [data_retention_and_privacy#chunk_0]."}
+      ]
+    query: "Can that be extended?"
+    reference_answer: "Yes, on Enterprise. Enterprise workspaces can configure Trash retention of up to 180 days."
+  metadata:
+    id: conv-002
+    category: conversational
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [data_retention_and_privacy#chunk_0]
+    key_facts: ["up to 180 days"]
+    source: human
+    subsets: [phase5]
+
+- description: "Follow-up: minimum contract for the SSO plan"
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "Which plans include SSO?"},
+        {"role": "assistant", "content": "SAML single sign-on is available on the Enterprise plan only [account_security#chunk_2]."}
+      ]
+    query: "What's the minimum contract size for that plan?"
+    reference_answer: "The minimum Enterprise contract is 50 users billed annually."
+  metadata:
+    id: conv-003
+    category: conversational
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_4]
+    key_facts: ["minimum Enterprise contract is 50 users billed annually"]
+    source: human
+    subsets: [phase5]
+
+- description: "Follow-up: file limit on Free after error E204"
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does error E204 mean?"},
+        {"role": "assistant", "content": "E204 means the attachment is larger than your plan's file size limit. Compress the file or upgrade your plan [troubleshooting#chunk_0]."}
+      ]
+    query: "What's the limit on the Free plan?"
+    reference_answer: "On the Free plan the maximum size of a single attachment is 10 MB."
+  metadata:
+    id: conv-004
+    category: conversational
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [troubleshooting#chunk_1]
+    key_facts: ["Free 10 MB"]
+    source: human
+    subsets: [phase5]

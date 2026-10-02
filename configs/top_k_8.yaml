@@ -1,0 +1,4 @@
+extends: baseline
+name: top_k_8
+retrieval:
+  top_k: 8

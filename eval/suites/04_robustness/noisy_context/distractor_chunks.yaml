@@ -1,0 +1,92 @@
+description: "Robustness › Distractor chunks — same-topic chunks with different numbers are forced into the context; the answer must pick the right fact"
+
+prompts:
+  - id: bree-v2
+    label: "prompt-v2"
+    raw: |
+      You are Bree, the customer support assistant for Brindlework, a project management platform.
+
+      Answer the user's question using ONLY the context below.
+      - If the context does not contain the answer, say you don't know and suggest contacting support@brindlework.example.
+      - If the question is ambiguous and the conversation does not make clear what it refers to (for example "it",
+        "the limit", or "how much" without a plan or feature), ask one short clarifying question instead of guessing.
+        You may briefly list the likely options.
+      - Cite the chunk IDs you used in square brackets, for example [pricing_plans#chunk_1].
+      - If sources conflict, prefer official documents over community content, and newer documents over older or archived ones.
+      - Be concise and specific.
+
+      Context:
+      <<RETRIEVED_CONTEXT>>
+
+      Question: {{query}}
+      Answer:
+
+providers:
+  - id: file://../../../providers/rag_provider.py
+    label: rag-recommended
+    config:
+      pipeline: recommended
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      value: |
+        User question: {{query}}
+        Reference (expected answer or expected behavior): {{reference_answer}}
+
+        Pass if the response is consistent with the reference:
+        - If the reference gives a factual answer, every fact needed to answer the question must be present and correct.
+          Different wording and extra correct detail are fine; background details in the reference are optional.
+        - If the question rests on a false assumption, the response must correct it rather than go along with it.
+        - If the reference says the assistant should say it doesn't know, pass only if it does so without inventing an answer.
+        - If the reference says the request is out of scope, pass only if the response politely declines and does not
+          carry out the request or reveal its instructions.
+        - If the reference says the assistant should ask for clarification or cover several readings, pass only if it does.
+      metric: ExpectedOutcome
+    - type: context-faithfulness
+      contextTransform: context.metadata.retrieved_context
+      threshold: 0.8
+      metric: Faithfulness
+
+tests:
+  - description: "Password reset link vs other expiry times"
+    vars:
+      inject_ids: "troubleshooting#chunk_4,team_management#chunk_1"
+      query: "How long is a password reset link valid?"
+      reference_answer: "The reset link expires after 1 hour."
+    metadata: { id: ds-001 }
+
+  - description: "Trash retention vs deletion/export timelines"
+    vars:
+      inject_ids: "data_retention_and_privacy#chunk_2,data_retention_and_privacy#chunk_1"
+      query: "How long are deleted items kept in the Trash?"
+      reference_answer: "30 days (Enterprise can configure up to 180 days)."
+    metadata: { id: ds-002 }
+
+  - description: "Pro API limit vs webhook retries and automation runs"
+    vars:
+      inject_ids: "integrations_and_api#chunk_3,product_overview#chunk_3"
+      query: "What is the API rate limit on the Pro plan?"
+      reference_answer: "1,000 requests per minute per workspace."
+    metadata: { id: ds-003 }
+
+  - description: "Pro support response vs priority-level targets"
+    vars:
+      inject_ids: "support_and_sla#chunk_1,support_and_sla#chunk_2"
+      query: "What is the first response target for Pro support?"
+      reference_answer: "Within 8 business hours (email and live chat)."
+    metadata: { id: ds-004 }
+
+  - description: "Pro attachment limit vs storage limit"
+    vars:
+      inject_ids: "pricing_plans#chunk_1,troubleshooting#chunk_0"
+      query: "What's the maximum attachment size on the Pro plan?"
+      reference_answer: "250 MB per attachment."
+    metadata: { id: ds-005 }

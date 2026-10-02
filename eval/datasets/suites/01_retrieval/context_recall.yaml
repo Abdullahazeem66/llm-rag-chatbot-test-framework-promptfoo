@@ -1,0 +1,248 @@
+- description: Starter vs Pro support response
+  vars:
+    query: How do support channels and response times differ between Starter and Pro?
+    reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+      with a first response within 8 business hours.
+  metadata:
+    id: cmp-002
+    gold_ids:
+    - support_and_sla#chunk_0
+    key_facts:
+    - Within 48 business hours
+    - Within 8 business hours
+
+- description: Monthly vs annual refund rules
+  vars:
+    query: How are refunds different for monthly and annual subscriptions?
+    reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge. Annual subscriptions
+      can be refunded on a prorated basis within 30 days of the purchase or renewal date; after that they are not refundable,
+      but auto-renewal can be turned off.
+  metadata:
+    id: cmp-004
+    gold_ids:
+    - billing_and_refunds#chunk_4
+    key_facts:
+    - within 14 days of the most recent charge
+    - within 30 days of the purchase or renewal date
+
+- description: 'Follow-up: rate limit of previously discussed plan'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "What does the Pro plan cost?"},
+        {"role": "assistant", "content": "Pro costs $15 per user per month on monthly billing, or $12 per user per month billed annually [pricing_plans#chunk_1]."}
+      ]
+    query: And what's its API rate limit?
+    reference_answer: The Pro plan API rate limit is 1,000 requests per minute per workspace.
+  metadata:
+    id: conv-001
+    gold_ids:
+    - integrations_and_api#chunk_2
+    key_facts:
+    - 'Pro: 1,000 requests per minute'
+
+- description: 'Follow-up: minimum contract for the SSO plan'
+  vars:
+    history: |
+      [
+        {"role": "user", "content": "Which plans include SSO?"},
+        {"role": "assistant", "content": "SAML single sign-on is available on the Enterprise plan only [account_security#chunk_2]."}
+      ]
+    query: What's the minimum contract size for that plan?
+    reference_answer: The minimum Enterprise contract is 50 users billed annually.
+  metadata:
+    id: conv-003
+    gold_ids:
+    - pricing_plans#chunk_4
+    key_facts:
+    - minimum Enterprise contract is 50 users billed annually
+
+- description: 'Starter plan: Zapier access and API rate limit'
+  vars:
+    query: I'm on the Starter plan. Can I use the Zapier integration, and what is my API rate limit?
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001
+    gold_ids:
+    - integrations_and_api#chunk_0
+    - integrations_and_api#chunk_2
+    key_facts:
+    - '| Zapier | Pro and above |'
+    - 'Starter: 300 requests per minute'
+
+- description: File size limit for the $8 plan
+  vars:
+    query: What is the largest single file I can attach on the plan that costs $8 per user per month?
+    reference_answer: The $8 per user monthly plan is Starter, which allows attachments up to 100 MB each.
+  metadata:
+    id: mh-003
+    gold_ids:
+    - pricing_plans#chunk_1
+    - troubleshooting#chunk_1
+    key_facts:
+    - '| Starter | $8 |'
+    - Starter 100 MB
+
+- description: 'Guests on Starter: seats and allowance'
+  vars:
+    query: On the Starter plan, do guests count as paid seats, and how many guests can I invite?
+    reference_answer: Guests do not count as paid seats. The Starter plan allows up to 5 guests.
+  metadata:
+    id: mh-005
+    gold_ids:
+    - billing_and_refunds#chunk_0
+    - pricing_plans#chunk_1
+    key_facts:
+    - Guests do not count as paid seats
+    - '| Starter | $8 | $6.40 | 25 | 100 GB | 5 |'
+
+- description: Automation runs for the 1 TB plan
+  vars:
+    query: How many automation runs per month does the plan with 1 TB of storage include?
+    reference_answer: The plan with 1 TB of storage is Pro, which includes 5,000 automation runs per month.
+  metadata:
+    id: mh-007
+    gold_ids:
+    - pricing_plans#chunk_1
+    - product_overview#chunk_3
+    key_facts:
+    - 1 TB
+    - 'Pro: 5,000 runs per month'
+
+- description: Starter monthly cost for 10 users
+  vars:
+    query: How much would 10 users on the Starter plan cost per month with monthly billing?
+    reference_answer: Starter is $8 per user per month on monthly billing, so 10 users cost $80 per month, excluding taxes.
+  metadata:
+    id: num-001
+    gold_ids:
+    - pricing_plans#chunk_1
+    key_facts:
+    - '| Starter | $8 |'
+
+- description: Starter member limit
+  vars:
+    query: What is the maximum number of members on the Starter plan?
+    reference_answer: The Starter plan allows up to 25 members.
+  metadata:
+    id: num-003
+    gold_ids:
+    - pricing_plans#chunk_1
+    key_facts:
+    - '| Starter | $8 | $6.40 | 25 |'
+
+- description: Service credit for 98.5% uptime
+  vars:
+    query: Our Enterprise uptime last month was 98.5%. What service credit do we get?
+    reference_answer: Uptime below 99.0% qualifies for a service credit of 25% of the monthly fee under the Enterprise 99.95%
+      uptime SLA.
+  metadata:
+    id: num-005
+    gold_ids:
+    - support_and_sla#chunk_2
+    key_facts:
+    - 25% if it falls below 99.0%
+
+- description: Pro plan monthly price
+  vars:
+    query: How much does the Pro plan cost per user on monthly billing?
+    reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+  metadata:
+    id: sh-001
+    gold_ids:
+    - pricing_plans#chunk_1
+    key_facts:
+    - '| Pro | $15 |'
+
+- description: Minimum password length
+  vars:
+    query: What is the minimum password length?
+    reference_answer: Passwords must be at least 12 characters long and cannot match any of your last 5 passwords.
+  metadata:
+    id: sh-003
+    gold_ids:
+    - account_security#chunk_0
+    key_facts:
+    - at least 12 characters
+
+- description: Trash retention period
+  vars:
+    query: How long are deleted items kept in the Trash?
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005
+    gold_ids:
+    - data_retention_and_privacy#chunk_0
+    key_facts:
+    - kept for 30 days
+    - up to 180 days
+
+- description: Invitation expiry
+  vars:
+    query: How long does a workspace invitation stay valid?
+    reference_answer: Invitations expire after 7 days.
+  metadata:
+    id: sh-007
+    gold_ids:
+    - team_management#chunk_1
+    key_facts:
+    - Invitations expire after 7 days
+
+- description: Company headquarters
+  vars:
+    query: Where is Brindlework headquartered?
+    reference_answer: Brindlework is headquartered in Lisbon, Portugal.
+  metadata:
+    id: sh-009
+    gold_ids:
+    - product_overview#chunk_0
+    key_facts:
+    - Lisbon, Portugal
+
+- description: Webhook signing
+  vars:
+    query: How can I verify that a webhook request really came from Brindlework?
+    reference_answer: Each webhook request is signed with an HMAC-SHA256 signature sent in the X-Brindlework-Signature header.
+  metadata:
+    id: sh-011
+    gold_ids:
+    - integrations_and_api#chunk_3
+    key_facts:
+    - HMAC-SHA256
+    - X-Brindlework-Signature
+
+- description: Brindlework AI release date
+  vars:
+    query: When was Brindlework AI released?
+    reference_answer: Brindlework AI was released in version 5.2 on August 12, 2026.
+  metadata:
+    id: tmp-001
+    gold_ids:
+    - release_notes#chunk_0
+    key_facts:
+    - Version 5.2 - August 12, 2026
+
+- description: Recurring tasks introduction
+  vars:
+    query: In which version and when were recurring tasks introduced?
+    reference_answer: Recurring tasks were introduced in version 4.8, released on October 2, 2025.
+  metadata:
+    id: tmp-003
+    gold_ids:
+    - release_notes#chunk_3
+    key_facts:
+    - Version 4.8 - October 2, 2025
+    - Recurring tasks
+
+- description: Annual discount change in 5.0
+  vars:
+    query: How did the annual billing discount change in release 5.0?
+    reference_answer: Release 5.0 (January 15, 2026) increased the annual billing discount from 15% to 20%.
+  metadata:
+    id: tmp-005
+    gold_ids:
+    - release_notes#chunk_2
+    key_facts:
+    - increased from 15% to 20%

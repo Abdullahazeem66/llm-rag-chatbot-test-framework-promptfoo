@@ -1,0 +1,124 @@
+- description: '[long_context] Pro plan monthly price'
+  vars:
+    query: 'Hi there! I''ve been using Brindlework with my team for a few months now and mostly love it, though the mobile app
+      could be faster. My manager asked me to sort out a few admin things before our quarterly review next week. Anyway, here''s
+      my actual question: How much does the Pro plan cost per user on monthly billing? Appreciate the help. Have a great day.'
+    reference_answer: The Pro plan costs $15 per user per month on monthly billing (excluding taxes).
+  metadata:
+    id: sh-001~long_context
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - pricing_plans#chunk_1
+    key_facts:
+    - '| Pro | $15 |'
+    source: human
+    perturbation: long_context
+    parent_id: sh-001
+
+- description: '[long_context] Trash retention period'
+  vars:
+    query: 'Good morning. I''m the office manager at a small architecture studio in Porto and I handle most of our software
+      accounts, so I get a lot of questions from the team that I then have to look up. Anyway, here''s my actual question:
+      How long are deleted items kept in the Trash? Thanks a lot in advance, and sorry for the long message!'
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005~long_context
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - data_retention_and_privacy#chunk_0
+    key_facts:
+    - kept for 30 days
+    - up to 180 days
+    source: human
+    perturbation: long_context
+    parent_id: sh-005
+
+- description: '[long_context] API rate limit response'
+  vars:
+    query: 'Hi there! I''ve been using Brindlework with my team for a few months now and mostly love it, though the mobile app
+      could be faster. My manager asked me to sort out a few admin things before our quarterly review next week. Anyway, here''s
+      my actual question: What happens when my API integration exceeds the rate limit? Thanks! Also, keep up the good work
+      on the product.'
+    reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+      retrying.
+  metadata:
+    id: sh-010~long_context
+    category: single_hop
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - integrations_and_api#chunk_2
+    key_facts:
+    - '429'
+    - Retry-After
+    source: human
+    perturbation: long_context
+    parent_id: sh-010
+
+- description: '[long_context] Starter plan: Zapier access and API rate limit'
+  vars:
+    query: 'Hi there! I''ve been using Brindlework with my team for a few months now and mostly love it, though the mobile app
+      could be faster. My manager asked me to sort out a few admin things before our quarterly review next week. Anyway, here''s
+      my actual question: I''m on the Starter plan. Can I use the Zapier integration, and what is my API rate limit? Thanks!
+      Also, keep up the good work on the product.'
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001~long_context
+    category: multi_hop
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids:
+    - integrations_and_api#chunk_0
+    - integrations_and_api#chunk_2
+    key_facts:
+    - '| Zapier | Pro and above |'
+    - 'Starter: 300 requests per minute'
+    source: human
+    perturbation: long_context
+    parent_id: mh-001
+
+- description: '[long_context] Starter vs Pro support response'
+  vars:
+    query: 'Hello, quick question before our planning meeting. We moved over from spreadsheets last year and everyone on the
+      design team is still getting used to boards versus lists, which is a separate story. Anyway, here''s my actual question:
+      How do support channels and response times differ between Starter and Pro? Appreciate the help. Have a great day.'
+    reference_answer: Starter has email support with a first response within 48 business hours. Pro has email and live chat
+      with a first response within 8 business hours.
+  metadata:
+    id: cmp-002~long_context
+    category: comparison
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - support_and_sla#chunk_0
+    key_facts:
+    - Within 48 business hours
+    - Within 8 business hours
+    source: human
+    perturbation: long_context
+    parent_id: cmp-002
+
+- description: '[long_context] Enterprise P1 response target'
+  vars:
+    query: 'Hello, quick question before our planning meeting. We moved over from spreadsheets last year and everyone on the
+      design team is still getting used to boards versus lists, which is a separate story. Anyway, here''s my actual question:
+      What is the response time target for a critical P1 issue on Enterprise? Thanks! Also, keep up the good work on the product.'
+    reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+  metadata:
+    id: num-004~long_context
+    category: numerical
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids:
+    - support_and_sla#chunk_0
+    key_facts:
+    - 1 hour for P1 (critical) issues
+    source: human
+    perturbation: long_context
+    parent_id: num-004

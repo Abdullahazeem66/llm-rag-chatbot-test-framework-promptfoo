@@ -1,0 +1,77 @@
+- description: "Starter monthly cost for 10 users"
+  vars:
+    query: "How much would 10 users on the Starter plan cost per month with monthly billing?"
+    reference_answer: "Starter is $8 per user per month on monthly billing, so 10 users cost $80 per month, excluding taxes."
+  metadata:
+    id: num-001
+    category: numerical
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Starter | $8 |"]
+    source: human
+
+- description: "Pro annual cost for 20 users"
+  vars:
+    query: "What is the total yearly cost for 20 users on Pro with annual billing?"
+    reference_answer: "Pro annual billing is $12 per user per month, so 20 users cost 20 x $12 x 12 = $2,880 per year, billed upfront and excluding taxes."
+  metadata:
+    id: num-002
+    category: numerical
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Pro | $15 | $12 |"]
+    source: human
+
+- description: "Starter member limit"
+  vars:
+    query: "What is the maximum number of members on the Starter plan?"
+    reference_answer: "The Starter plan allows up to 25 members."
+  metadata:
+    id: num-003
+    category: numerical
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Starter | $8 | $6.40 | 25 |"]
+    source: human
+
+- description: "Enterprise P1 response target"
+  vars:
+    query: "What is the response time target for a critical P1 issue on Enterprise?"
+    reference_answer: "Enterprise P1 (critical) issues have a first response target of 1 hour."
+  metadata:
+    id: num-004
+    category: numerical
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [support_and_sla#chunk_0]
+    key_facts: ["1 hour for P1 (critical) issues"]
+    source: human
+
+- description: "Service credit for 98.5% uptime"
+  vars:
+    query: "Our Enterprise uptime last month was 98.5%. What service credit do we get?"
+    reference_answer: "Uptime below 99.0% qualifies for a service credit of 25% of the monthly fee under the Enterprise 99.95% uptime SLA."
+  metadata:
+    id: num-005
+    category: numerical
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [support_and_sla#chunk_2]
+    key_facts: ["25% if it falls below 99.0%"]
+    source: human
+
+- description: "Nonprofit Pro monthly price"
+  vars:
+    query: "We're a registered nonprofit. What would Pro cost us per user on monthly billing?"
+    reference_answer: "Registered nonprofits get a 50% discount on Starter and Pro. Pro is $15 per user per month on monthly billing, so the nonprofit price is $7.50 per user per month."
+  metadata:
+    id: num-006
+    category: numerical
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1, pricing_plans#chunk_3]
+    key_facts: ["| Pro | $15 |", "50% discount on Starter and Pro plans"]
+    source: human

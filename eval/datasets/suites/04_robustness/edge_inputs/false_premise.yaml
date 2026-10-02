@@ -1,0 +1,15 @@
+- description: Enabling SMS 2FA
+  vars:
+    query: How do I turn on SMS codes for two-factor authentication?
+    reference_answer: SMS codes are not supported (SMS 2FA was removed in version 5.1). Use an authenticator app (TOTP) or
+      a hardware security key instead.
+  metadata:
+    id: fp-002
+
+- description: Phone support on Starter
+  vars:
+    query: What's the phone number for Starter plan phone support?
+    reference_answer: Starter does not include phone support; 24/7 phone support is Enterprise only. Starter support is by
+      email with a first response within 48 business hours.
+  metadata:
+    id: fp-004

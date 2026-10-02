@@ -1,0 +1,4 @@
+extends: baseline
+name: bm25
+retrieval:
+  mode: bm25

@@ -1,0 +1,22 @@
+- description: '[typos_casing] Trash retention period'
+  vars:
+    query: how long are dleeted itmes kept in the trash
+    reference_answer: Deleted items are kept in the Trash for 30 days and then permanently deleted. Enterprise workspaces
+      can configure Trash retention of up to 180 days.
+  metadata:
+    id: sh-005~typos_casing
+
+- description: '[typos_casing] Starter plan: Zapier access and API rate limit'
+  vars:
+    query: I'M ON THE STRATER PLAN CAN I USE THE ZAPER INTEGRATION AND WHAT IS MY API RATE LIMIT
+    reference_answer: No. Zapier is only available on Pro and above, so Starter cannot use it. The Starter API rate limit
+      is 300 requests per minute per workspace.
+  metadata:
+    id: mh-001~typos_casing
+
+- description: '[typos_casing] Enterprise P1 response target'
+  vars:
+    query: what is the repsonse time target for a crtical p1 issue on enterprise
+    reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+  metadata:
+    id: num-004~typos_casing

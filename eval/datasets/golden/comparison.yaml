@@ -1,0 +1,64 @@
+- description: "Owner vs Admin role"
+  vars:
+    query: "What is the difference between an Owner and an Admin?"
+    reference_answer: "Owners have full control, including billing, deleting the workspace, and transferring ownership. Admins manage members, integrations, and workspace settings but cannot delete the workspace or change the plan."
+  metadata:
+    id: cmp-001
+    category: comparison
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [team_management#chunk_0]
+    key_facts: ["deleting the workspace, and transferring ownership", "cannot delete the workspace or change the plan"]
+    source: human
+
+- description: "Starter vs Pro support response"
+  vars:
+    query: "How do support channels and response times differ between Starter and Pro?"
+    reference_answer: "Starter has email support with a first response within 48 business hours. Pro has email and live chat with a first response within 8 business hours."
+  metadata:
+    id: cmp-002
+    category: comparison
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [support_and_sla#chunk_0]
+    key_facts: ["Within 48 business hours", "Within 8 business hours"]
+    source: human
+
+- description: "Pro annual vs monthly savings"
+  vars:
+    query: "How much does one user save per year on Pro by paying annually instead of monthly?"
+    reference_answer: "Pro costs $15 per month on monthly billing ($180 per year) and $12 per month on annual billing ($144 per year), so annual billing saves $36 per user per year, a 20% discount."
+  metadata:
+    id: cmp-003
+    category: comparison
+    difficulty: hard
+    expected_behavior: answer
+    gold_ids: [pricing_plans#chunk_1]
+    key_facts: ["| Pro | $15 | $12 |", "20% discount"]
+    source: human
+
+- description: "Monthly vs annual refund rules"
+  vars:
+    query: "How are refunds different for monthly and annual subscriptions?"
+    reference_answer: "Monthly subscriptions can be refunded in full within 14 days of the most recent charge. Annual subscriptions can be refunded on a prorated basis within 30 days of the purchase or renewal date; after that they are not refundable, but auto-renewal can be turned off."
+  metadata:
+    id: cmp-004
+    category: comparison
+    difficulty: medium
+    expected_behavior: answer
+    gold_ids: [billing_and_refunds#chunk_4]
+    key_facts: ["within 14 days of the most recent charge", "within 30 days of the purchase or renewal date"]
+    source: human
+
+- description: "Audit logs Pro vs Enterprise"
+  vars:
+    query: "Compare audit log retention between Pro and Enterprise."
+    reference_answer: "Pro keeps audit logs for 90 days. Enterprise keeps them for 1 year and can stream them to a SIEM. Free and Starter do not have audit logs."
+  metadata:
+    id: cmp-005
+    category: comparison
+    difficulty: easy
+    expected_behavior: answer
+    gold_ids: [account_security#chunk_4]
+    key_facts: ["Pro: audit logs are kept for 90 days", "Enterprise: audit logs are kept for 1 year"]
+    source: human

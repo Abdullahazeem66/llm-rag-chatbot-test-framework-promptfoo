@@ -1,0 +1,101 @@
+- description: "Office locations outside HQ"
+  vars:
+    query: "Does Brindlework have an office in Tokyo?"
+    reference_answer: "The documentation does not say. It only mentions headquarters in Lisbon, Portugal. The assistant should say it doesn't know and suggest contacting support at support@brindlework.example."
+  metadata:
+    id: un-001
+    category: unanswerable
+    difficulty: medium
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [product_overview#chunk_0]
+    source: human
+
+- description: "Jira integration"
+  vars:
+    query: "How do I connect Brindlework to Jira?"
+    reference_answer: "Jira is not among the documented integrations. The assistant should say it has no information about a Jira integration and suggest contacting support at support@brindlework.example."
+  metadata:
+    id: un-002
+    category: unanswerable
+    difficulty: medium
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [integrations_and_api#chunk_0]
+    source: human
+    subsets: [phase5]
+
+- description: "CEO name"
+  vars:
+    query: "Who is the CEO of Brindlework?"
+    reference_answer: "The documentation does not name the CEO. The assistant should say it doesn't know."
+  metadata:
+    id: un-003
+    category: unanswerable
+    difficulty: easy
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [product_overview#chunk_0, team_management#chunk_0]
+    source: human
+
+- description: "Storage add-on price"
+  vars:
+    query: "How much does an extra storage add-on cost?"
+    reference_answer: "The documentation mentions storage add-ons only as non-refundable and does not give a price. The assistant should say it doesn't know the price and suggest contacting support at support@brindlework.example."
+  metadata:
+    id: un-004
+    category: unanswerable
+    difficulty: hard
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [pricing_plans#chunk_1]
+    distractor_ids: [billing_and_refunds#chunk_4]
+    source: human
+    subsets: [phase5]
+
+- description: "Notion integration"
+  vars:
+    query: "Can I sync my Brindlework tasks with Notion?"
+    reference_answer: "Notion is not a documented integration. The assistant should say it doesn't know; it may mention that Zapier (Pro and above) connects to many apps but must not claim Notion is supported. Suggesting support at support@brindlework.example is expected."
+  metadata:
+    id: un-005
+    category: unanswerable
+    difficulty: hard
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [integrations_and_api#chunk_0]
+    source: human
+
+- description: "Project count limit"
+  vars:
+    query: "What is the maximum number of projects in a workspace?"
+    reference_answer: "The documentation does not specify a limit on projects per workspace. The assistant should say it doesn't know."
+  metadata:
+    id: un-006
+    category: unanswerable
+    difficulty: medium
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [product_overview#chunk_1, pricing_plans#chunk_1]
+    source: human
+
+- description: "HIPAA compliance"
+  vars:
+    query: "Is Brindlework HIPAA compliant and will you sign a BAA?"
+    reference_answer: "The documentation covers GDPR, a DPA, and SOC 2 Type II but says nothing about HIPAA or BAAs. The assistant should not claim HIPAA compliance and should suggest contacting support at support@brindlework.example or sales."
+  metadata:
+    id: un-007
+    category: unanswerable
+    difficulty: hard
+    expected_behavior: refuse
+    gold_ids: []
+    key_facts: []
+    context_ids: [account_security#chunk_5]
+    distractor_ids: [data_retention_and_privacy#chunk_4]
+    source: human

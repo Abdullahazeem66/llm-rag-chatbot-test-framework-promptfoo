@@ -1,0 +1,303 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: "Retrieval › Context recall — the retrieved text contains everything needed to write the reference answer (LLM rubric; complements Recall@5 / FactRecall@5)"
+
+prompts:
+  - id: query-only
+    label: "Raw query"
+    raw: "{{query}}"
+
+providers:
+  - id: file://../../providers/retriever_only.py
+    label: retriever-baseline
+    config:
+      pipeline: baseline
+      top_k: 5
+      workers: 4
+
+defaultTest:
+  options:
+    provider:
+      id: openai:gpt-6-luna
+      config:
+        omitDefaults: true
+        passthrough: { reasoning: { effort: medium } }
+  assert:
+    - type: llm-rubric
+      transform: (context.metadata?.retrieved_context || []).join('\n\n---\n\n')
+      value: |
+        The text being graded is the set of documentation chunks a search system retrieved for this question:
+        {{query}}
+
+        Reference answer: {{reference_answer}}
+
+        Pass if the retrieved chunks contain the information needed to write every fact in the reference answer,
+        so that a correct answer could be written from these chunks alone. Facts the reference derives by simple
+        arithmetic or by combining stated facts count as supported. Remarks in the reference about other sources
+        (for example "the archived pricing said ...") are optional.
+        Fail if any fact needed to answer the question is missing from the chunks. Name the missing fact.
+      metric: ContextRecall
+
+tests:
+  - description: Owner vs Admin role
+    vars:
+      query: What is the difference between an Owner and an Admin?
+      reference_answer: Owners have full control, including billing, deleting the workspace, and transferring ownership. Admins
+        manage members, integrations, and workspace settings but cannot delete the workspace or change the plan.
+    metadata:
+      id: cmp-001
+      gold_ids:
+      - team_management#chunk_0
+      key_facts:
+      - deleting the workspace, and transferring ownership
+      - cannot delete the workspace or change the plan
+
+  - description: Pro annual vs monthly savings
+    vars:
+      query: How much does one user save per year on Pro by paying annually instead of monthly?
+      reference_answer: Pro costs $15 per month on monthly billing ($180 per year) and $12 per month on annual billing ($144
+        per year), so annual billing saves $36 per user per year, a 20% discount.
+    metadata:
+      id: cmp-003
+      gold_ids:
+      - pricing_plans#chunk_1
+      key_facts:
+      - '| Pro | $15 | $12 |'
+      - 20% discount
+
+  - description: Audit logs Pro vs Enterprise
+    vars:
+      query: Compare audit log retention between Pro and Enterprise.
+      reference_answer: Pro keeps audit logs for 90 days. Enterprise keeps them for 1 year and can stream them to a SIEM. Free
+        and Starter do not have audit logs.
+    metadata:
+      id: cmp-005
+      gold_ids:
+      - account_security#chunk_4
+      key_facts:
+      - 'Pro: audit logs are kept for 90 days'
+      - 'Enterprise: audit logs are kept for 1 year'
+
+  - description: 'Follow-up: extending Trash retention'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "How long do deleted items stay in the Trash?"},
+          {"role": "assistant", "content": "Deleted items stay in the Trash for 30 days and are then permanently deleted [data_retention_and_privacy#chunk_0]."}
+        ]
+      query: Can that be extended?
+      reference_answer: Yes, on Enterprise. Enterprise workspaces can configure Trash retention of up to 180 days.
+    metadata:
+      id: conv-002
+      gold_ids:
+      - data_retention_and_privacy#chunk_0
+      key_facts:
+      - up to 180 days
+
+  - description: 'Follow-up: file limit on Free after error E204'
+    vars:
+      history: |
+        [
+          {"role": "user", "content": "What does error E204 mean?"},
+          {"role": "assistant", "content": "E204 means the attachment is larger than your plan's file size limit. Compress the file or upgrade your plan [troubleshooting#chunk_0]."}
+        ]
+      query: What's the limit on the Free plan?
+      reference_answer: On the Free plan the maximum size of a single attachment is 10 MB.
+    metadata:
+      id: conv-004
+      gold_ids:
+      - troubleshooting#chunk_1
+      key_facts:
+      - Free 10 MB
+
+  - description: EU data residency on Pro and when it became available
+    vars:
+      query: Can a Pro workspace be hosted in the EU, and since when has that been possible?
+      reference_answer: Yes. Pro workspaces can use the EU region in Frankfurt, Germany. It became available on Pro in version
+        5.1 on May 20, 2026; before that it was Enterprise only. The region is chosen when the workspace is created.
+    metadata:
+      id: mh-002
+      gold_ids:
+      - data_retention_and_privacy#chunk_3
+      - release_notes#chunk_1
+      key_facts:
+      - Frankfurt
+      - May 20, 2026
+
+  - description: Support response time on cheapest plan with Timeline view
+    vars:
+      query: How quickly will support respond on the cheapest plan that includes the Timeline view?
+      reference_answer: Timeline view is available on Pro and Enterprise only, so the cheapest such plan is Pro. Pro support
+        (email and live chat) targets a first response within 8 business hours.
+    metadata:
+      id: mh-004
+      gold_ids:
+      - product_overview#chunk_1
+      - support_and_sla#chunk_0
+      key_facts:
+      - Available on Pro and Enterprise plans only
+      - Within 8 business hours
+
+  - description: Enterprise SSO options and audit log retention
+    vars:
+      query: What single sign-on options do we get on Enterprise, and how long are audit logs kept on that plan?
+      reference_answer: Enterprise includes SAML 2.0 SSO with identity providers such as Okta, Microsoft Entra ID (Azure AD),
+        Google Workspace, and OneLogin, plus SCIM 2.0 provisioning. Enterprise audit logs are kept for 1 year and can be streamed
+        to a SIEM.
+    metadata:
+      id: mh-006
+      gold_ids:
+      - account_security#chunk_2
+      - account_security#chunk_4
+      key_facts:
+      - SAML 2.0
+      - 'Enterprise: audit logs are kept for 1 year'
+
+  - description: Cheapest annual price with Brindlework AI
+    vars:
+      query: What is the cheapest annual per-user price for a plan that includes Brindlework AI?
+      reference_answer: Brindlework AI is included in Pro and Enterprise. The cheapest is Pro at $12 per user per month on annual
+        billing.
+    metadata:
+      id: mh-008
+      gold_ids:
+      - product_overview#chunk_4
+      - pricing_plans#chunk_1
+      key_facts:
+      - Brindlework AI is included in Pro and Enterprise plans
+      - '| Pro | $15 | $12 |'
+
+  - description: Pro annual cost for 20 users
+    vars:
+      query: What is the total yearly cost for 20 users on Pro with annual billing?
+      reference_answer: Pro annual billing is $12 per user per month, so 20 users cost 20 x $12 x 12 = $2,880 per year, billed
+        upfront and excluding taxes.
+    metadata:
+      id: num-002
+      gold_ids:
+      - pricing_plans#chunk_1
+      key_facts:
+      - '| Pro | $15 | $12 |'
+
+  - description: Enterprise P1 response target
+    vars:
+      query: What is the response time target for a critical P1 issue on Enterprise?
+      reference_answer: Enterprise P1 (critical) issues have a first response target of 1 hour.
+    metadata:
+      id: num-004
+      gold_ids:
+      - support_and_sla#chunk_0
+      key_facts:
+      - 1 hour for P1 (critical) issues
+
+  - description: Nonprofit Pro monthly price
+    vars:
+      query: We're a registered nonprofit. What would Pro cost us per user on monthly billing?
+      reference_answer: Registered nonprofits get a 50% discount on Starter and Pro. Pro is $15 per user per month on monthly
+        billing, so the nonprofit price is $7.50 per user per month.
+    metadata:
+      id: num-006
+      gold_ids:
+      - pricing_plans#chunk_1
+      - pricing_plans#chunk_3
+      key_facts:
+      - '| Pro | $15 |'
+      - 50% discount on Starter and Pro plans
+
+  - description: Monthly refund window
+    vars:
+      query: How long do I have to request a refund on a monthly subscription?
+      reference_answer: Monthly subscriptions can be refunded in full within 14 days of the most recent charge.
+    metadata:
+      id: sh-002
+      gold_ids:
+      - billing_and_refunds#chunk_4
+      key_facts:
+      - within 14 days of the most recent charge
+
+  - description: Error code E301
+    vars:
+      query: I'm getting error E301. What does it mean?
+      reference_answer: E301 means permission denied. Ask a project Admin to give you access.
+    metadata:
+      id: sh-004
+      gold_ids:
+      - troubleshooting#chunk_0
+      key_facts:
+      - E301 | Permission denied
+
+  - description: Accepted payment methods
+    vars:
+      query: Which payment methods does Brindlework accept?
+      reference_answer: Brindlework accepts Visa, Mastercard, American Express, and PayPal. Bank transfer against an invoice is
+        available for Enterprise customers and annual Pro subscriptions with 20 or more seats.
+    metadata:
+      id: sh-006
+      gold_ids:
+      - billing_and_refunds#chunk_1
+      key_facts:
+      - Visa, Mastercard, American Express, and PayPal
+      - 20 or more seats
+
+  - description: Maximum number of Owners
+    vars:
+      query: How many Owners can a workspace have?
+      reference_answer: A workspace can have up to 3 Owners.
+    metadata:
+      id: sh-008
+      gold_ids:
+      - team_management#chunk_0
+      key_facts:
+      - up to 3 Owners
+
+  - description: API rate limit response
+    vars:
+      query: What happens when my API integration exceeds the rate limit?
+      reference_answer: The API responds with HTTP status 429 and a Retry-After header that says how many seconds to wait before
+        retrying.
+    metadata:
+      id: sh-010
+      gold_ids:
+      - integrations_and_api#chunk_2
+      key_facts:
+      - '429'
+      - Retry-After
+
+  - description: Account lockout
+    vars:
+      query: What happens if I enter the wrong password too many times?
+      reference_answer: After 10 failed sign-in attempts, the account is locked for 15 minutes.
+    metadata:
+      id: sh-012
+      gold_ids:
+      - troubleshooting#chunk_4
+      key_facts:
+      - 10 failed sign-in attempts
+      - locked for 15 minutes
+
+  - description: Pro trial length before 2026
+    vars:
+      query: How long was the Pro trial before the January 2026 pricing change?
+      reference_answer: Before release 5.0 (January 15, 2026) the trial was 30 days (on the Business plan, since renamed Pro)
+        and required a credit card. It is now 14 days with no credit card required.
+    metadata:
+      id: tmp-002
+      gold_ids:
+      - release_notes#chunk_2
+      key_facts:
+      - shortened from 30 days to 14 days
+
+  - description: Old desktop version cannot sync
+    vars:
+      query: My desktop app is version 4.3 and it won't sync. Why?
+      reference_answer: Desktop versions older than 4.5 are no longer supported and cannot sync, because version 4.5 (April
+        9, 2025) introduced a new sync engine. Update to the latest version.
+    metadata:
+      id: tmp-004
+      gold_ids:
+      - troubleshooting#chunk_2
+      - release_notes#chunk_4
+      key_facts:
+      - older than 4.5 are no longer supported
+      - April 9, 2025
+
+  - file://../../datasets/suites/01_retrieval/context_recall.yaml
