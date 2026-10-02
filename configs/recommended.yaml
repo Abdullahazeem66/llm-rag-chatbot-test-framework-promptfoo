@@ -1,2 +1,2 @@
-extends: hr_fast
+extends: baseline
 name: recommended

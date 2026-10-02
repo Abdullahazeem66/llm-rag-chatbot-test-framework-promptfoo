@@ -14,7 +14,7 @@ The chatbot works in two steps: it **retrieves** relevant chunks from 12 help-ce
 |---|---|---|
 | Retrieval | `eval/suites/01_retrieval` | Does search find the right chunks? |
 | Generation | `eval/suites/02_generation` | Given the right chunks, is the answer correct, grounded and well written? (retrieval is skipped; the test supplies the chunks) |
-| End to end | `eval/suites/03_end_to_end` | Does the whole chatbot answer correctly, quickly and cheaply? |
+| End to end | `eval/suites/03_end_to_end` | Does the whole chatbot answer correctly and quickly? |
 | Robustness | `eval/suites/04_robustness` | Does it still work with reworded, misspelled, translated, off-topic or misleading input? |
 
 If a case passes in Generation but fails End to end, the problem is in retrieval. Comparing layers this way locates the root cause.
@@ -22,15 +22,15 @@ If a case passes in Generation but fails End to end, the problem is in retrieval
 ### Test strategy
 
 ```
-Test data  →  Test each layer  →  Stress it  →  Grade  →  Triage  →  Fix and re-run
+Test data  →  Test each layer  →  Stress it  →  Grade  →  Triage  →  Compare alternatives
 ```
 
 1. **Test data:** 66 hand-written test cases across 11 question types (single fact, multi-part, comparison, numbers, dates, follow-ups, unanswerable, ambiguous, conflicting sources, false premise, off-topic). Each case has a reference answer, the chunks that contain the answer, and the key facts.
 2. **Test each layer:** retrieval alone, generation alone (with the correct chunks supplied), then the full pipeline.
 3. **Stress it:** robustness tests with reworded, misspelled, translated or padded questions, and misleading documents.
-4. **Grade:** deterministic checks wherever possible (recall, citations, key facts, latency, cost). An LLM judge is used only where wording varies, and its failing verdicts are reviewed by hand before being trusted.
+4. **Grade:** deterministic checks wherever possible (recall, citations, key facts, latency). An LLM judge is used only where wording varies, and its failing verdicts are reviewed by hand before being trusted.
 5. **Triage:** each failure is classified as an app defect, a test-harness defect, a judge defect or a test-data defect before anything is changed.
-6. **Fix and re-run:** compare pipeline configurations and prompts on the same cases, adopt the best, and re-run to confirm.
+6. **Compare alternatives:** run alternative pipeline configurations and prompts on the same cases (`03_end_to_end/config_matrix.yaml`) to see which changes would fix the defects found.
 
 **Test techniques used:**
 - **Metamorphic testing:** paraphrases, typos and six languages must give the same answer
@@ -41,36 +41,30 @@ Test data  →  Test each layer  →  Stress it  →  Grade  →  Triage  →  F
 
 ## Results
 
-Full run on the recommended configuration (hybrid search + LLM reranking, gpt-6-luna):
+Full run on the tested configuration (`configs/recommended.yaml`: vector search, top 5 chunks, gpt-6-luna):
 
 | Layer | Suite | Pass |
 |---|---|---|
-| Retrieval | Ranking metrics (Recall@5 0.92, MRR 0.85) | 47/52 |
+| Retrieval | Ranking metrics (Recall@5 0.92, MRR 0.84) | 47/52 |
 | | Context relevance / context recall (LLM-judged) | 43/52 · 36/40 |
-| Generation | Correctness · answer relevance · format | 48/50 · 49/50 · 23/23 |
-| | Refusal ("I don't know") · clarification | 6/7 · 4/4 |
-| | Faithfulness | 40/52 |
-| | Hard contexts (buried answer, prompt injection, …) | 6/8 |
-| End to end | Answer quality, all 66 cases | 60/66 |
+| Generation | Correctness · answer relevance · format | 49/50 · 48/50 · 23/23 |
+| | Refusal ("I don't know") · clarification | 7/7 · 3/4 |
+| | Faithfulness | 44/52 |
+| | Hard contexts (buried answer, prompt injection, …) | 7/8 |
+| End to end | Answer quality, all 66 cases | 55/66 |
 | | Multi-turn · consistency · performance | 5/5 · 15/15 · 16/16 |
-| Robustness | Paraphrase · typos · multilingual · long queries | 6/6 · 6/6 · 6/6 · 6/6 |
+| Robustness | Paraphrase · typos · multilingual · long queries | 5/6 · 6/6 · 5/6 · 4/6 |
 | | Conflicting docs · distractors · false premises | 6/6 · 5/5 · 4/5 |
 | | Off-topic requests | 2/5 |
 
-Typical answer: about 5 seconds and $0.0004. A full run of all suites costs about $0.20.
-
 ## Defects found
 
-| Area | Defect |
-|---|---|
-| App | Follow-up questions ("Can that be extended?") retrieved the wrong chunks |
-| App | Two-part questions missed one of the needed facts |
-| App | Ambiguous questions were answered with a guess |
-| App | Off-topic requests are answered (e.g. it tells jokes) |
-| Test harness | Latency was overstated about 4× because promptfoo queued requests behind one worker |
-| Test harness | Splitting chunk text broke markdown tables |
-| Judge | promptfoo's `context-recall` judge failed to grade 25 of 40 cases (output format errors) |
-| Test data | Correct "contact support" answers were failed because reference answers didn't allow it |
+| Defect |
+|---|
+| Follow-up questions ("Can that be extended?") retrieved the wrong chunks |
+| Two-part questions missed one of the needed facts |
+| Ambiguous questions were answered with a guess |
+| Off-topic requests are answered (e.g. it tells jokes) |
 
 ## Running the tests
 
